@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --color-navy-50: #f0f4ff;
+  --color-navy-100: #dce8ff;
+  --color-navy-200: #c0d3ff;
+  --color-navy-300: #91b4fd;
+  --color-navy-400: #5d8af9;
+  --color-navy-500: #3662f2;
+  --color-navy-600: #2041e7;
+  --color-navy-700: #1932d4;
+  --color-navy-800: #1a2bac;
+  --color-navy-900: #1b2c87;
+  --color-navy-950: #0d2e6e;
+  --color-teal-50: #ecfeff;
+  --color-teal-100: #cffafe;
+  --color-teal-400: #22d3ee;
+  --color-teal-500: #06b6d4;
+  --color-teal-600: #0891b2;
+  --color-teal-700: #0e7490;
+}
+
+html, body, #root {
+  height: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  color: #1e293b;
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-x: none;
+}
+
+.serif { font-family: 'Playfair Display', Georgia, serif; }
+
+/* Shared cards for the initiative pages. */
+.initiative-card {
+  border: 1px solid #dce8ff;
+  border-radius: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f7faff 100%);
+  box-shadow: 0 1px 2px rgba(13, 46, 110, 0.04), inset -1px -1px 0 rgba(93, 138, 249, 0.35);
+}
+
+/* The global header is fixed, so keep the application page controls below it. */
+main > div.bg-slate-50.px-6.py-16 {
+  padding-top: 9rem;
+}
+
+/* Company details open as a right-side drawer while keeping the directory visible behind it. */
+[class~="fixed"][class~="items-center"][class~="justify-center"] {
+  display: block;
+  padding: 0;
+}
+
+[class~="max-w-lg"][class~="rounded-3xl"][class~="shadow-2xl"] {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  height: 100%;
+  max-width: 36rem;
+  flex-direction: column;
+  overflow-y: auto;
+  border-radius: 0;
+  padding: 3rem;
+  animation: companyDrawerIn 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[class~="max-w-lg"][class~="rounded-3xl"] [class~="h-20"][class~="w-20"] {
+  height: 8rem;
+  width: 8rem;
+  font-size: 1.875rem;
+}
+
+[class~="h-16"][class~="w-16"] {
+  height: 6rem;
+  width: 6rem;
+  font-size: 1.125rem;
+}
+
+@keyframes companyDrawerIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+/* ── Grainy gradient hero ── */
+.grain-bg {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 80% 10%, rgba(6,182,212,0.55) 0%, transparent 48%),
+    radial-gradient(ellipse at 10% 75%, rgba(29,78,216,0.55) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 85%, rgba(99,102,241,0.30) 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 40%, rgba(13,46,110,0.60) 0%, transparent 55%),
+    #020d1e;
+}
+
+/* Bottom calls to action ease from the white page into the shared dark footer. */
+.cta-section {
+  background:
+    linear-gradient(to bottom, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.42) 48px, rgba(255,255,255,0) 170px),
+    radial-gradient(ellipse at 80% 10%, rgba(6,182,212,0.55) 0%, transparent 48%),
+    radial-gradient(ellipse at 10% 75%, rgba(29,78,216,0.55) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 85%, rgba(99,102,241,0.30) 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 40%, rgba(13,46,110,0.60) 0%, transparent 55%),
+    #020d1e;
+}
+
+.site-footer {
+  margin-top: -1px;
+}
+
+/* Animated blob layer floats behind content */
+.grain-bg::after {
+  content: '';
+  position: absolute;
+  inset: -40%;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 50% 40% at 70% 60%, rgba(6,182,212,0.65) 0%, transparent 100%),
+    radial-gradient(ellipse 55% 45% at 15% 30%, rgba(29,78,216,0.60) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 35% at 50% 90%, rgba(99,102,241,0.45) 0%, transparent 100%);
+  animation: grainWave 10s ease-in-out infinite;
+  filter: blur(12px);
+}
+
+@keyframes grainWave {
+  0%,  100% { transform: translate(0%,    0%)   scale(1);    }
+  25%        { transform: translate(8%,   12%)  scale(1.08); }
+  50%        { transform: translate(-6%,   7%)  scale(0.93); }
+  75%        { transform: translate(10%,  -8%)  scale(1.06); }
+}
+
+/* Grain noise overlay */
+.grain-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.18;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+
+.grain-bg > * { position: relative; z-index: 2; }
+
+/* ── Scroll fade-in ── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16,1,0.3,1), transform 0.65s cubic-bezier(0.16,1,0.3,1);
+}
+.fade-up.in-view { opacity: 1; transform: translateY(0); }
+
+/* ── Marquee ticker ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes marquee-left {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes marquee-right {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+.marquee-left  { animation: marquee-left  28s linear infinite; }
+.marquee-right { animation: marquee-right 22s linear infinite; }
+.marquee-left:hover,
+.marquee-right:hover { animation-play-state: paused; }
+
+.partner-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.partner-marquee-track:hover { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-left,
+  .marquee-right { animation: none; }
+}
+
+/* Scrollbars */
+* { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+*::-webkit-scrollbar { width: 5px; height: 5px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }

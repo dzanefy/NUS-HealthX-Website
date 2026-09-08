@@ -1,0 +1,10 @@
+{
+  "description": "Connects students across disciplines to explore healthcare innovation through interactive event timelines, mentor profiles, and detailed program insights.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
