@@ -7,6 +7,7 @@ import path from 'node:path'
 // external deployment checkouts. Keep safe defaults here so Vercel can build
 // the app without depending on the Figma-only metadata file.
 const siteConfiguration: FigmaSiteConfiguration = {
+  title: 'NUS HealthX',
   description:
     'Connects students across disciplines to explore healthcare innovation through interactive event timelines, mentor profiles, and detailed program insights.',
   robots: { index: false },
