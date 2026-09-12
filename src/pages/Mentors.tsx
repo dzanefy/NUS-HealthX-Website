@@ -2,6 +2,16 @@ import { useState, useRef } from 'react';
 import { mentors, type Mentor } from '../data/mentors';
 import FadeIn from '../components/FadeIn';
 
+function MentorPhoto({ mentor, compact = false }: { mentor: Mentor; compact?: boolean }) {
+  const [failed, setFailed] = useState(false);
+  if (mentor.photo && !failed) return <img src={mentor.photo} alt={mentor.name} onError={() => setFailed(true)} className="h-full w-full object-cover object-top" />;
+  const initials = mentor.name.replace(/^(Dr\.?|Prof\.?)\s+/i, '').split(/\s+/).map(word => word[0]).slice(0, 2).join('');
+  return <div aria-label={`Photo coming soon for ${mentor.name}`} className={`flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-navy-50 to-navy-200 text-navy-950 ${compact ? 'text-base' : 'min-h-64 pb-12 text-6xl'}`}>
+    <span aria-hidden="true" className="font-semibold">{initials}</span>
+    {!compact && <span className="mt-3 text-xs font-medium">Photo coming soon</span>}
+  </div>;
+}
+
 function MentorCard({ mentor, isSelected, onClick }: { mentor: Mentor; isSelected: boolean; onClick: () => void }) {
   return (
     <button
@@ -9,11 +19,7 @@ function MentorCard({ mentor, isSelected, onClick }: { mentor: Mentor; isSelecte
       className={`group text-left flex-shrink-0 w-60 rounded-2xl overflow-hidden transition-all duration-300 ${isSelected ? 'ring-2 ring-teal-500 shadow-2xl shadow-teal-500/20 scale-[1.02]' : 'hover:shadow-xl hover:shadow-navy-950/10 hover:-translate-y-1'}`}
     >
       <div className="relative aspect-[3/4] overflow-hidden bg-navy-100">
-        <img
-          src={mentor.photo}
-          alt={mentor.name}
-          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-        />
+        <MentorPhoto key={mentor.id} mentor={mentor} />
         <div className="absolute inset-0 bg-gradient-to-t from-navy-950/80 via-navy-950/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-5">
           <p className="serif text-base font-bold text-white leading-tight">{mentor.name}</p>
@@ -27,6 +33,19 @@ function MentorCard({ mentor, isSelected, onClick }: { mentor: Mentor; isSelecte
 export default function Mentors() {
   const [selected, setSelected] = useState<Mentor | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [query, setQuery] = useState('');
+  const [expertise, setExpertise] = useState('');
+  const expertiseOptions = [...new Set(mentors.flatMap(mentor => mentor.expertise))].sort((a, b) => a.localeCompare(b));
+  const filteredMentors = mentors.filter(mentor =>
+    mentor.name.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()) &&
+    (!expertise || mentor.expertise.includes(expertise))
+  );
+  function updateFilters(name: string, area: string) {
+    setQuery(name);
+    setExpertise(area);
+    setSelected(null);
+    scrollRef.current?.scrollTo({ left: 0 });
+  }
 
   function scroll(dir: 'left' | 'right') {
     scrollRef.current?.scrollBy({ left: dir === 'right' ? 300 : -300, behavior: 'smooth' });
@@ -47,6 +66,20 @@ export default function Mentors() {
       {/* ── CAROUSEL ── */}
       <section className="pt-20 pb-10 bg-white">
         <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-8 grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end">
+            <label className="flex min-w-0 flex-col gap-2 text-sm font-semibold text-navy-950">Search by name
+              <input type="search" value={query} onChange={e => updateFilters(e.target.value, expertise)} placeholder="Enter a mentor’s name…" className="w-full rounded-xl border border-navy-100 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-navy-600" />
+            </label>
+            <label className="flex min-w-0 flex-col gap-2 text-sm font-semibold text-navy-950">Area of expertise
+              <select value={expertise} onChange={e => updateFilters(query, e.target.value)} className="w-full rounded-xl border border-navy-100 bg-white px-4 py-3 focus-visible:outline-2 focus-visible:outline-navy-600">
+                <option value="">All areas of expertise</option>
+                {expertiseOptions.map(area => <option key={area} value={area}>{area}</option>)}
+              </select>
+            </label>
+            {(query || expertise) && <button onClick={() => updateFilters('', '')} className="rounded-xl px-4 py-3 text-sm font-semibold text-navy-950 underline">Clear filters</button>}
+          </div>
+          <p role="status" aria-live="polite" className="mb-6 text-sm text-slate-500">Showing {filteredMentors.length} of {mentors.length} mentors</p>
+          {filteredMentors.length === 0 && <div className="mb-8 rounded-2xl bg-navy-50 p-8 text-center text-navy-950">No mentors match your search. Try another name or clear the expertise filter.</div>}
           <div className="flex items-end justify-between mb-8">
             <FadeIn>
               <p className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-2">Browse</p>
@@ -63,7 +96,7 @@ export default function Mentors() {
           </div>
 
           <div ref={scrollRef} className="flex gap-5 overflow-x-auto pb-6" style={{ scrollbarWidth: 'none' }}>
-            {mentors.map(m => (
+            {filteredMentors.map(m => (
               <MentorCard key={m.id} mentor={m} isSelected={selected?.id === m.id} onClick={() => setSelected(prev => prev?.id === m.id ? null : m)} />
             ))}
           </div>
@@ -78,7 +111,7 @@ export default function Mentors() {
               <div className="grid md:grid-cols-[320px_1fr]">
                 {/* Photo */}
                 <div className="relative aspect-[3/4] md:aspect-auto overflow-hidden bg-navy-100">
-                  <img src={selected.photo} alt={selected.name} className="w-full h-full object-cover object-top"/>
+                  <MentorPhoto key={selected.id} mentor={selected} />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
                     <p className="serif text-xl font-bold text-white">{selected.name}</p>
@@ -111,11 +144,11 @@ export default function Mentors() {
 
                   <div className="flex-1 mb-6">
                     <p className="text-[10px] font-bold uppercase tracking-widest text-slate-300 mb-3">About</p>
-                    <p className="text-sm text-slate-600 leading-relaxed">{selected.bio}</p>
+                    <p className="whitespace-pre-line text-sm text-slate-600 leading-relaxed">{selected.bio}</p>
                   </div>
 
                   {selected.linkedIn && (
-                    <a href={selected.linkedIn} className="inline-flex items-center gap-2 text-sm font-bold text-navy-950 hover:text-teal-600 transition-colors self-start">
+                    <a href={selected.linkedIn} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-sm font-bold text-navy-950 hover:text-teal-600 transition-colors self-start">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                       </svg>
@@ -134,25 +167,25 @@ export default function Mentors() {
         <div className="max-w-6xl mx-auto">
           <FadeIn className="mb-10">
             <p className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-2">Directory</p>
-            <h2 className="serif text-4xl font-bold text-navy-950">All mentors</h2>
+            <h2 className="serif text-4xl font-bold text-navy-950">{query || expertise ? 'Matching mentors' : 'All mentors'} <span className="text-2xl text-slate-500">({filteredMentors.length})</span></h2>
           </FadeIn>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {mentors.map((m, i) => (
-              <FadeIn key={m.id} delay={i * 80}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredMentors.map((m, i) => (
+              <FadeIn key={m.id} delay={i * 80} className="min-w-0 h-full">
               <button
                 key={m.id}
                 onClick={() => {
                   setSelected(prev => prev?.id === m.id ? null : m);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="group bg-white rounded-2xl border border-slate-100 hover:border-navy-200 hover:shadow-md transition-all text-left p-4 flex items-center gap-4"
+                className="group w-full min-w-0 h-36 bg-white rounded-2xl border border-slate-100 hover:border-navy-200 hover:shadow-md transition-all text-left p-4 flex items-center gap-4"
               >
                 <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 bg-navy-50">
-                  <img src={m.photo} alt={m.name} className="w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-500"/>
+                  <MentorPhoto key={m.id} mentor={m} compact />
                 </div>
-                <div className="min-w-0">
-                  <p className="serif text-sm font-bold text-navy-950 truncate group-hover:text-teal-700 transition-colors">{m.name}</p>
-                  <p className="text-xs text-teal-600 font-semibold mt-0.5 truncate">{m.affiliation}</p>
+                <div className="min-w-0 flex-1">
+                  <p title={m.name} className="serif text-sm leading-5 font-bold text-navy-950 line-clamp-2 break-words group-hover:text-teal-700 transition-colors">{m.name}</p>
+                  <p title={m.affiliation} className="text-xs leading-5 text-teal-600 font-semibold mt-1 line-clamp-2 break-words">{m.affiliation}</p>
                 </div>
               </button>
               </FadeIn>

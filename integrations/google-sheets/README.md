@@ -4,6 +4,27 @@ Google Sheets is the event editing source. A private Google Apps Script sends ro
 
 ## One time setup for the maintainer
 
+For the latest script, apply the base sync migration, article image migration,
+event categories migration, then `supabase/migrations/20260912_event_sheet_mirror.sql`
+before running syncEvents.
+
+## Upgrade: hide rows removed from the sheet
+
+1. Run `supabase/migrations/20260912_event_sheet_mirror.sql` in Supabase SQL Editor after the earlier migrations.
+2. Replace Code.gs in the private Apps Script project with this version and save. Do not rerun setupSheet.
+3. Fill all required fields, including Summary for Published events, then run syncEvents once. Existing five-minute triggers continue using the saved script.
+
+Each successful sync updates current rows and archives missing sheet-managed events
+in one database transaction. Removing a row hides it from the website; restoring
+the same Event ID with Published status brings it back. No records are deleted.
+An Events tab containing just the correct headers hides ALL sheet-managed events.
+Missing/incorrect headers or invalid rows stop the whole sync without changing the
+database. Records without a sheet_event_id are untouched; manage those separately.
+The database function can only be called by the private script's service role,
+not by website visitors. Use one source sheet and one maintainer script per database.
+
+## Initial setup steps
+
 1. In Supabase SQL Editor, run `supabase/migrations/20260912_event_sheet_sync.sql`. It preserves existing rows but defaults them to Draft, hiding them from the public website until you explicitly publish them. This replaces the old policy which exposed every event. Do not drop your table.
 2. Create an empty Google spreadsheet owned by the HealthX maintainer. Copy its spreadsheet ID (the part between `/d/` and `/edit` in the URL).
 3. At https://script.google.com create a **standalone** project named HealthX Events Sync. Paste `Code.gs` into its editor. Do not create the script through the shared sheet’s Extensions menu: sheet editors must not gain access to database credentials.
@@ -20,6 +41,21 @@ Google Sheets is the event editing source. A private Google Apps Script sends ro
 
 ## Instructions for coworkers
 
+### Event types, sub-pillars and audience (existing setup upgrade)
+
+Before deploying this website version:
+
+1. Run `supabase/migrations/20260912_event_categories.sql` in Supabase SQL Editor. This preserves existing events and marks uncategorised events as Other. The website now reads these columns, so the migration must run before deployment.
+2. Append these exact headers to the Events sheet without moving A–N: **O1: Event Type**, **P1: Sub-pillar**, **Q1: Audience**.
+3. Paste the updated `Code.gs` into the private Apps Script project and save. Do not rerun setupSheet or erase existing rows. Existing triggers use the saved script.
+4. Fill Event Type with Fireside Chats, Xeminars, Masterclasses, Case Study Fellowship, Research Fellowship, or Other. Blank means Other; categories are not guessed from titles.
+5. For a Masterclass, Sub-pillar can be Coding for Medicine; otherwise leave it blank. Audience is free text, e.g. All students, no coding experience needed.
+6. Run syncEvents, verify the new fields in Supabase, then deploy the website. Test each filter on X’posure and Timeline, including a category with no events. Archived/Draft events must remain hidden.
+
+The Google Sheet remains the single editing source, not a new in-website admin panel. Both views use the same published Supabase records. X’posure has a card view for upcoming/past events and an upcoming-only timeline. Upcoming events sort nearest first; past events sort newest first. Spotlight automatically selects the next upcoming event (or newest past event if none), respecting filters. The main Timeline also filters by type, sub-pillar and upcoming/past. Upcoming remains controlled by the sheet’s TRUE/FALSE field; update it after an event finishes.
+
+For registration, keep using column I (Registration URL). A full published Google Form link such as `https://docs.google.com/forms/d/e/FORM_ID/viewform` also enables a click-to-load embedded form on an upcoming event’s article. Short forms.gle links and other registration links remain external links. Check the form’s audience/access settings yourself; embedding does not bypass sign-in restrictions. This website does not receive or store form responses.
+
 ### Separate card and article images
 
 For an existing setup, first run `supabase/migrations/20260912_event_article_image.sql` in Supabase SQL Editor (after the base sync migration). Then add `Article Image URL` in cell **N1**, immediately after Acknowledgements. Do not move or rename the existing columns. Replace the code in your private Apps Script project with the latest `Code.gs` and save; do not rerun setupSheet on a populated sheet. Existing scheduled triggers use the saved code. Run syncEvents to verify, then deploy the website changes. The database migration must precede the new website build.
@@ -33,7 +69,7 @@ Sheet editing permission does not grant upload permission in Supabase. Until a d
 
 - One row per event. Give each a unique permanent Event ID; do not change IDs after syncing.
 - Keep headings and their order unchanged. Use Draft while preparing and Published when ready.
-- Use Archived to hide an event. Do not delete its row: missing rows are deliberately left unchanged to prevent accidental mass deletion. Past events can remain Published with Upcoming FALSE.
+- Delete a row or set Archived to hide an event after the next successful sync. Past events can remain Published with Upcoming FALSE. Deleted events are archived in the database, not permanently erased.
 - Enter a short introduction in Summary and the full article in Article. Optional fields can be blank.
 - If you copy a row for a new event, give the copy a new Event ID.
 - If any row has invalid data, the whole sync pauses and the previous website version remains. Ask the maintainer to check Executions, correct the row, and retry.

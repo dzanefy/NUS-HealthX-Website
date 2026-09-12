@@ -2,7 +2,8 @@
 // the shared spreadsheet. Only its trusted maintainer should access this script.
 const HEADERS = ['Event ID', 'Title', 'Summary', 'Article', 'Event date',
   'Event time', 'Location', 'Image URL', 'Registration URL', 'Upcoming',
-  'Status', 'Speakers', 'Acknowledgements', 'Article Image URL'];
+  'Status', 'Speakers', 'Acknowledgements', 'Article Image URL', 'Event Type', 'Sub-pillar', 'Audience'];
+const EVENT_TYPES = ['Fireside Chats', 'Xeminars', 'Masterclasses', 'Case Study Fellowship', 'Research Fellowship', 'Other'];
 
 function eventSheet() {
   const id = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
@@ -17,7 +18,7 @@ function setupSheet() {
   sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS])
     .setBackground('#0d2e6e').setFontColor('#ffffff').setFontWeight('bold');
   sheet.setFrozenRows(1);
-  sheet.getRange('A2:N1000').setNumberFormat('@').setWrap(true);
+  sheet.getRange('A2:Q1000').setNumberFormat('@').setWrap(true);
   sheet.setColumnWidths(1, HEADERS.length, 180);
   sheet.setColumnWidths(3, 2, 320);
   sheet.getRange('K2:K1000').setDataValidation(SpreadsheetApp.newDataValidation()
@@ -27,11 +28,15 @@ function setupSheet() {
   sheet.getRange('A1').setNote('Use a unique ID such as EVT-001. Never change it after syncing.');
   sheet.getRange('E1').setNote('Use YYYY-MM-DD, e.g. 2026-09-09.');
   sheet.getRange('L1').setNote('One speaker per line: Name | Job title | Organisation');
-  sheet.getRange('K1').setNote('Only Published is visible. Archive instead of deleting rows.');
+  sheet.getRange('K1').setNote('Only Published is visible. Deleted rows are hidden after a successful sync.');
+  sheet.getRange('O2:O1000').setDataValidation(SpreadsheetApp.newDataValidation()
+    .requireValueInList(EVENT_TYPES, true).setAllowInvalid(false).build());
+  sheet.getRange('P1').setNote('Optional: Coding for Medicine (only for Masterclasses).');
+  sheet.getRange('Q1').setNote('Who should attend? E.g. All NUS students; no coding experience needed.');
 }
 
-// Validate the whole batch before sending any changes. Missing/deleted rows
-// do not delete database records: use Archived to explicitly remove an event.
+// Validate the whole snapshot before sending changes. Missing sheet-managed
+// events are archived atomically by the database, never permanently deleted.
 function parseEvents(values) {
   if (!values.length || HEADERS.some((h, i) => values[0][i] !== h)) {
     throw new Error('Headers changed. Restore the original column names and order.');
@@ -40,8 +45,11 @@ function parseEvents(values) {
   return values.slice(1).flatMap((cells, i) => {
     if (cells.every(v => !String(v).trim())) return [];
     const v = HEADERS.map((_, j) => String(cells[j] || '').trim());
-    const [id, title, summary, article, date, time, location, image, registration, upcoming, rawStatus, speakerText, acknowledgements, articleImage] = v;
+    const [id, title, summary, article, date, time, location, image, registration, upcoming, rawStatus, speakerText, acknowledgements, articleImage, rawCategory, subPillar, audience] = v;
     const fail = message => { throw new Error('Row ' + (i + 2) + ': ' + message); };
+    const category = rawCategory || 'Other';
+    if (!EVENT_TYPES.includes(category)) fail('Choose a valid Event Type.');
+    if (subPillar && (subPillar !== 'Coding for Medicine' || category !== 'Masterclasses')) fail('Coding for Medicine is a sub-pillar of Masterclasses. Otherwise leave Sub-pillar blank.');
     if (!/^[A-Za-z0-9_-]{1,80}$/.test(id)) fail('Enter an Event ID using letters, numbers, - or _.');
     if (seen.has(id)) fail('Duplicate Event ID: ' + id);
     seen.add(id);
@@ -62,7 +70,8 @@ function parseEvents(values) {
     return [{ sheet_event_id: id, title: title || 'Untitled event', summary,
       description: article, event_date: date || null, event_time: time,
       location, image_url: image || null, article_image_url: articleImage || null, registration_url: registration || null,
-      is_upcoming: upcoming.toUpperCase() === 'TRUE', status, speakers, acknowledgements }];
+      is_upcoming: upcoming.toUpperCase() === 'TRUE', status, speakers, acknowledgements,
+      category, sub_pillar: subPillar, audience }];
   });
 }
 
@@ -77,11 +86,10 @@ function syncEvents() {
       throw new Error('Set SUPABASE_URL and an sb_secret_ key in this private script’s properties.');
     }
     const rows = parseEvents(eventSheet().getDataRange().getDisplayValues());
-    if (!rows.length) throw new Error('No event rows. Existing website events have been left unchanged.');
-    const response = UrlFetchApp.fetch(url + '/rest/v1/events?on_conflict=sheet_event_id', {
+    const response = UrlFetchApp.fetch(url + '/rest/v1/rpc/sync_event_sheet', {
       method: 'post', contentType: 'application/json',
-      headers: { apikey: key, Prefer: 'resolution=merge-duplicates,return=minimal' },
-      payload: JSON.stringify(rows), muteHttpExceptions: true,
+      headers: { apikey: key },
+      payload: JSON.stringify({ rows }), muteHttpExceptions: true,
     });
     if (response.getResponseCode() >= 300) {
       throw new Error('Supabase rejected sync (HTTP ' + response.getResponseCode() + '). Check the migration and script credentials.');

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router';
 import { useEvents } from '../hooks/useEvents';
+import EventRegistration from '../components/EventRegistration';
 import FadeIn from '../components/FadeIn';
 
 /* Maps event slugs to a second editorial image (different crop/angle) */
@@ -97,6 +98,8 @@ export default function ArticleDetail() {
           </h1>
 
           <div className="flex flex-wrap gap-5 text-sm text-navy-300">
+            {event.category && <span>{event.category}{event.subPillar ? ` · ${event.subPillar}` : ''}</span>}
+            {event.audience && <span>Who it’s for: {event.audience}</span>}
             <span className="flex items-center gap-2">
               <svg className="w-4 h-4 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -196,6 +199,7 @@ export default function ArticleDetail() {
               </span>
             ))}
           </div>
+          {event.upcoming && event.registerUrl && <EventRegistration key={event.registerUrl} url={event.registerUrl} title={event.title} />}
         </article>
 
         {/* ── SIDEBAR ── */}

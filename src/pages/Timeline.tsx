@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import { eventTypeConfig, type TimelineMonth } from '../data/timeline';
 import { useEvents } from '../hooks/useEvents';
+import EventFilters from '../components/EventFilters';
 import FadeIn from '../components/FadeIn';
 
 const typeAccent: Record<string, string> = {
@@ -31,9 +32,15 @@ const legendDot: Record<string, string> = {
 export default function Timeline() {
   const [activeEventId, setActiveEventId] = useState<string | null>(null);
   const { events, loading, error, retry } = useEvents();
+  const [category, setCategory] = useState('');
+  const [subPillar, setSubPillar] = useState('');
+  const [period, setPeriod] = useState('all');
   const timelineData = useMemo(() => {
     const months = new Map<string, TimelineMonth>();
     for (const event of events) {
+      if (category && (event.category || 'Other') !== category) continue;
+      if (subPillar && event.subPillar !== subPillar) continue;
+      if (period === 'upcoming' && !event.upcoming || period === 'past' && event.upcoming) continue;
       const date = event.dateISO ? new Date(`${event.dateISO}T12:00:00Z`) : null;
       const dated = date !== null && !Number.isNaN(date.getTime());
       const key = dated ? event.dateISO.slice(0, 7) : 'undated';
@@ -48,6 +55,7 @@ export default function Timeline() {
       }
       months.get(key)!.events.push({
         id: event.id, title: event.title, type: 'xposure',
+        category: event.category || 'Other', subPillar: event.subPillar,
         date: event.shortDate, dateISO: event.dateISO, location: event.location,
         description: event.excerpt, speakers: event.speakers.map(s => s.name),
         registerUrl: event.registerUrl, upcoming: event.upcoming, slug: event.slug,
@@ -56,9 +64,9 @@ export default function Timeline() {
     return [...months.values()].sort((a, b) => {
       if (a.monthISO === 'undated') return 1;
       if (b.monthISO === 'undated') return -1;
-      return b.monthISO.localeCompare(a.monthISO);
-    }).map(month => ({ ...month, events: month.events.sort((a, b) => b.dateISO.localeCompare(a.dateISO) || a.id.localeCompare(b.id)) }));
-  }, [events]);
+      return period === 'upcoming' ? a.monthISO.localeCompare(b.monthISO) : b.monthISO.localeCompare(a.monthISO);
+    }).map(month => ({ ...month, events: month.events.sort((a, b) => (period === 'upcoming' ? a.dateISO.localeCompare(b.dateISO) : b.dateISO.localeCompare(a.dateISO)) || a.id.localeCompare(b.id)) }));
+  }, [events, category, subPillar, period]);
 
   return (
     <div className="bg-white">
@@ -80,9 +88,16 @@ export default function Timeline() {
       </section>
 
       <div className="mx-auto grid max-w-6xl items-start gap-10 px-6 py-16 lg:grid-cols-[260px_1fr]">
+        <div className="flex flex-wrap items-end gap-4 lg:col-span-2">
+          <EventFilters category={category} subPillar={subPillar} onChange={(c, s) => { setCategory(c); setSubPillar(s); setActiveEventId(null); }} />
+          <label className="flex flex-col gap-2 text-sm font-semibold text-navy-950">When
+            <select value={period} onChange={e => { setPeriod(e.target.value); setActiveEventId(null); }} className="rounded-xl border border-navy-100 bg-white px-4 py-3"><option value="all">All dates</option><option value="upcoming">Upcoming</option><option value="past">Past</option></select>
+          </label>
+          {(category || subPillar || period !== 'all') && <button className="px-4 py-3 text-sm font-semibold text-navy-950 underline" onClick={() => { setCategory(''); setSubPillar(''); setPeriod('all'); }}>Clear filters</button>}
+        </div>
         {loading && <p role="status" className="text-slate-500 lg:col-span-2">Loading events…</p>}
         {error && <p role="alert" className="text-slate-600 lg:col-span-2">We couldn’t load events. <button onClick={retry} className="underline">Try again</button></p>}
-        {!loading && !error && events.length === 0 && <p className="text-slate-500 lg:col-span-2">No events published yet. Check back soon.</p>}
+        {!loading && !error && timelineData.length === 0 && <p role="status" className="text-slate-500 lg:col-span-2">No events match these filters.</p>}
         {timelineData.length > 0 && <>
         <nav className="lg:sticky lg:top-24">
           <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-300">Jump to month</p>
@@ -138,7 +153,7 @@ export default function Timeline() {
                             <div className="min-w-0 flex-1">
                               <div className="mb-1.5 flex flex-wrap items-center gap-2">
                                 <span className={`rounded-full border px-2.5 py-0.5 text-xs font-bold ${isActive ? 'border-navy-700 bg-navy-800 text-navy-200' : typeAccent[event.type]}`}>
-                                  {eventTypeConfig[event.type].label}
+                                  {event.category}{event.subPillar ? ` · ${event.subPillar}` : ''}
                                 </span>
                                 {!past && <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold ${isActive ? 'text-teal-300' : 'text-teal-600'}`}>Upcoming</span>}
                               </div>

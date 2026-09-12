@@ -18,7 +18,7 @@ export function useEvents() {
       try {
         const { data, error: queryError } = await supabase!
           .from('events')
-          .select('id,title,summary,description,speakers,acknowledgements,event_date,event_time,location,image_url,article_image_url,registration_url,is_upcoming')
+          .select('id,title,summary,description,speakers,acknowledgements,event_date,event_time,location,image_url,article_image_url,registration_url,is_upcoming,category,sub_pillar,audience')
           .eq('status', 'Published')
           .order('event_date', { ascending: false, nullsFirst: false })
           .abortSignal(controller.signal);
@@ -41,6 +41,9 @@ export function useEvents() {
           }) : [],
           acknowledgements: row.acknowledgements || '',
           tags: [],
+          category: row.category || 'Other',
+          subPillar: row.sub_pillar || '',
+          audience: row.audience || '',
           registerUrl: safeUrl(row.registration_url),
           upcoming: Boolean(row.is_upcoming),
         })));

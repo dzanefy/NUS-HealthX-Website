@@ -13,7 +13,7 @@ function harness() {
     PropertiesService: { getScriptProperties: () => ({ getProperty: k => properties.get(k), setProperty: (k, v) => properties.set(k, v), deleteProperty: k => properties.delete(k) }) },
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock() {} }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: () => ({ getDataRange: () => ({ getDisplayValues: () => context.values }) }) }) },
-    UrlFetchApp: { fetch: (_, options) => { calls++; context.payload = JSON.parse(options.payload); return { getResponseCode: () => context.httpStatus || 201 }; } },
+    UrlFetchApp: { fetch: (url, options) => { calls++; context.url = url; context.payload = JSON.parse(options.payload).rows; return { getResponseCode: () => context.httpStatus || 201 }; } },
   });
   vm.runInContext(source, context);
   context.headers = vm.runInContext('HEADERS', context);
@@ -46,9 +46,46 @@ test('failed responses record an error without a false success', () => {
   assert.equal(h.properties.has('LAST_SUCCESS'), false);
   assert.match(h.properties.get('LAST_ERROR'), /403/);
 });
-test('empty sheet cannot clear existing events', () => {
+test('valid header-only sheet sends an empty snapshot to hide sheet events', () => {
   const h = harness(); h.context.values = [h.context.headers];
+  h.context.syncEvents(); assert.equal(h.calls(), 1);
+  assert.equal(h.context.payload.length, 0);
+  assert.match(h.context.url, /\/rpc\/sync_event_sheet$/);
+});
+
+test('missing headers cannot archive events', () => {
+  const h = harness(); h.context.values = [];
   assert.throws(() => h.context.syncEvents()); assert.equal(h.calls(), 0);
+});
+
+test('category, sub-pillar and audience are synced and can be cleared', () => {
+  const h = harness();
+  h.context.values[1][14] = 'Masterclasses';
+  h.context.values[1][15] = 'Coding for Medicine';
+  h.context.values[1][16] = 'All students';
+  h.context.syncEvents();
+  assert.equal(h.context.payload[0].category, 'Masterclasses');
+  assert.equal(h.context.payload[0].sub_pillar, 'Coding for Medicine');
+  assert.equal(h.context.payload[0].audience, 'All students');
+  h.context.values[1][14] = ''; h.context.values[1][15] = ''; h.context.values[1][16] = '';
+  h.context.syncEvents();
+  assert.equal(h.context.payload[0].category, 'Other');
+  assert.equal(h.context.payload[0].sub_pillar, '');
+  assert.equal(h.context.payload[0].audience, '');
+});
+
+test('invalid categories and incompatible sub-pillars stop all writes', () => {
+  for (const [category, sub] of [['Unknown', ''], ['Xeminars', 'Coding for Medicine'], ['Masterclasses', 'Invalid']]) {
+    const h = harness(); h.context.values[1][14] = category; h.context.values[1][15] = sub;
+    assert.throws(() => h.context.syncEvents()); assert.equal(h.calls(), 0);
+  }
+});
+
+test('all five requested event types are accepted', () => {
+  for (const category of ['Fireside Chats', 'Xeminars', 'Masterclasses', 'Case Study Fellowship', 'Research Fellowship']) {
+    const h = harness(); h.context.values[1][14] = category; h.context.syncEvents();
+    assert.equal(h.context.payload[0].category, category);
+  }
 });
 
 test('card and article URLs remain independent; blank article URL clears the photo', () => {

@@ -20,6 +20,9 @@ export interface XPosureEvent {
   upcoming: boolean;
   acknowledgements?: string;
   articleImageUrl?: string;
+  category?: string;
+  subPillar?: string;
+  audience?: string;
 }
 
 export const xposureEvents: XPosureEvent[] = [

@@ -12,6 +12,8 @@ export interface TimelineEvent {
   registerUrl?: string;
   upcoming: boolean;
   slug?: string;
+  category?: string;
+  subPillar?: string;
 }
 
 export interface TimelineMonth {
