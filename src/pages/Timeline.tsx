@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { timelineData, eventTypeConfig, type TimelineEvent } from '../data/timeline';
+import { eventTypeConfig, type TimelineMonth } from '../data/timeline';
+import { useEvents } from '../hooks/useEvents';
 import FadeIn from '../components/FadeIn';
 
 const typeAccent: Record<string, string> = {
@@ -28,24 +29,48 @@ const legendDot: Record<string, string> = {
 };
 
 export default function Timeline() {
-  const [activeEvent, setActiveEvent] = useState<TimelineEvent | null>(null);
-  const now = new Date('2026-09-03');
-
-  function isPast(iso: string) {
-    return new Date(iso) < now;
-  }
+  const [activeEventId, setActiveEventId] = useState<string | null>(null);
+  const { events, loading, error, retry } = useEvents();
+  const timelineData = useMemo(() => {
+    const months = new Map<string, TimelineMonth>();
+    for (const event of events) {
+      const date = event.dateISO ? new Date(`${event.dateISO}T12:00:00Z`) : null;
+      const dated = date !== null && !Number.isNaN(date.getTime());
+      const key = dated ? event.dateISO.slice(0, 7) : 'undated';
+      if (!months.has(key)) {
+        months.set(key, {
+          monthISO: key,
+          month: dated ? date.toLocaleDateString('en-SG', { month: 'long', year: 'numeric', timeZone: 'UTC' }) : 'Date to be confirmed',
+          shortMonth: dated ? date.toLocaleDateString('en-SG', { month: 'short', timeZone: 'UTC' }) : 'TBC',
+          year: dated ? key.slice(0, 4) : '',
+          events: [],
+        });
+      }
+      months.get(key)!.events.push({
+        id: event.id, title: event.title, type: 'xposure',
+        date: event.shortDate, dateISO: event.dateISO, location: event.location,
+        description: event.excerpt, speakers: event.speakers.map(s => s.name),
+        registerUrl: event.registerUrl, upcoming: event.upcoming, slug: event.slug,
+      });
+    }
+    return [...months.values()].sort((a, b) => {
+      if (a.monthISO === 'undated') return 1;
+      if (b.monthISO === 'undated') return -1;
+      return b.monthISO.localeCompare(a.monthISO);
+    }).map(month => ({ ...month, events: month.events.sort((a, b) => b.dateISO.localeCompare(a.dateISO) || a.id.localeCompare(b.id)) }));
+  }, [events]);
 
   return (
     <div className="bg-white">
       <section className="grain-bg px-6 py-28 text-center">
-        <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-teal-300">Academic Year 2025 / 2026</p>
+        <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-teal-300">HealthX events</p>
         <h1 className="serif mb-6 text-[clamp(48px,8vw,96px)] font-bold leading-tight text-white">Timeline</h1>
         <p className="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-white/85">
-          An interactive overview of HealthX events and milestones. Click any event to see details and registration links.
+          Explore our published events, from upcoming sessions to past highlights. Click an event for details and its article.
         </p>
 
         <div className="mx-auto flex max-w-4xl flex-wrap justify-center gap-x-6 gap-y-3" aria-label="Event categories">
-          {Object.entries(eventTypeConfig).map(([type, cfg]) => (
+          {Object.entries(eventTypeConfig).filter(([type]) => timelineData.some(month => month.events.some(event => event.type === type))).map(([type, cfg]) => (
             <span key={type} className="inline-flex items-center gap-2 text-sm font-semibold text-white">
               <span className={`h-2.5 w-2.5 rounded-full ${legendDot[type]}`} aria-hidden="true" />
               {cfg.label}
@@ -55,11 +80,15 @@ export default function Timeline() {
       </section>
 
       <div className="mx-auto grid max-w-6xl items-start gap-10 px-6 py-16 lg:grid-cols-[260px_1fr]">
+        {loading && <p role="status" className="text-slate-500 lg:col-span-2">Loading events…</p>}
+        {error && <p role="alert" className="text-slate-600 lg:col-span-2">We couldn’t load events. <button onClick={retry} className="underline">Try again</button></p>}
+        {!loading && !error && events.length === 0 && <p className="text-slate-500 lg:col-span-2">No events published yet. Check back soon.</p>}
+        {timelineData.length > 0 && <>
         <nav className="lg:sticky lg:top-24">
           <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-300">Jump to month</p>
           <ul className="space-y-0.5">
             {timelineData.map(month => {
-              const hasFuture = month.events.some(event => !isPast(event.dateISO));
+              const hasFuture = month.events.some(event => event.upcoming);
               return (
                 <li key={month.monthISO}>
                   <a href={`#month-${month.monthISO}`} className="group flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-medium text-slate-500 transition-all hover:bg-navy-50 hover:text-navy-950">
@@ -79,7 +108,7 @@ export default function Timeline() {
             {timelineData.map(month => (
               <section key={month.monthISO} id={`month-${month.monthISO}`} className="scroll-mt-24">
                 <FadeIn className="relative z-10 mb-5 flex items-center gap-4">
-                  <div className={`relative flex h-10 w-10 flex-shrink-0 flex-col items-center justify-center rounded-full border-2 text-[10px] font-bold ${month.events.some(event => !isPast(event.dateISO)) ? 'border-navy-950 bg-navy-950 text-white' : 'border-slate-200 bg-white text-slate-400'}`}>
+                  <div className={`relative flex h-10 w-10 flex-shrink-0 flex-col items-center justify-center rounded-full border-2 text-[10px] font-bold ${month.events.some(event => event.upcoming) ? 'border-navy-950 bg-navy-950 text-white' : 'border-slate-200 bg-white text-slate-400'}`}>
                     <span>{month.shortMonth}</span>
                     <span className="text-[8px] opacity-60">{month.year}</span>
                   </div>
@@ -88,13 +117,13 @@ export default function Timeline() {
 
                 <div className="space-y-3 pl-14">
                   {month.events.map(event => {
-                    const past = isPast(event.dateISO);
-                    const isActive = activeEvent?.id === event.id;
+                    const past = !event.upcoming;
+                    const isActive = activeEventId === event.id;
 
                     return (
                       <div key={event.id}>
                         <button
-                          onClick={() => setActiveEvent(previous => previous?.id === event.id ? null : event)}
+                          onClick={() => setActiveEventId(previous => previous === event.id ? null : event.id)}
                           aria-expanded={isActive}
                           className={`w-full rounded-2xl border text-left transition-all duration-300 ${isActive
                             ? 'scale-[1.02] border-navy-950 bg-navy-950 shadow-xl shadow-navy-950/15'
@@ -159,6 +188,7 @@ export default function Timeline() {
             ))}
           </div>
         </div>
+        </>}
       </div>
 
       <section className="grain-bg cta-section px-6 py-28">

@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
-import { xposureEvents, type XPosureEvent } from '../data/events';
+import { type XPosureEvent } from '../data/events';
+import { useEvents } from '../hooks/useEvents';
 import FadeIn from '../components/FadeIn';
 import { InitiativeCta, InitiativeHero, InitiativeSectionHeader } from './InitiativePage';
 
@@ -54,6 +55,7 @@ function EventCard({ event, delay = 0 }: { event: XPosureEvent; delay?: number }
 }
 
 export default function XPosure() {
+  const { events: xposureEvents, loading, error, retry } = useEvents();
   const upcomingEvents = xposureEvents.filter(event => event.upcoming);
   const pastEvents = xposureEvents.filter(event => !event.upcoming);
 
@@ -93,9 +95,12 @@ export default function XPosure() {
 
       <section id="upcoming-events" className="bg-slate-50 px-6 py-24">
         <div className="mx-auto max-w-6xl">
+          {loading && <p role="status" className="mb-6 text-slate-500">Loading events…</p>}
+          {error && <p role="alert" className="mb-6 text-slate-600">We couldn’t load events. <button onClick={retry} className="underline">Try again</button></p>}
           <FadeIn>
             <InitiativeSectionHeader eyebrow="What is next" title="Upcoming events" />
           </FadeIn>
+          {!loading && !error && upcomingEvents.length === 0 && <p className="text-slate-500">No upcoming events announced yet. Check back soon.</p>}
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {upcomingEvents.map((event, index) => <EventCard key={event.id} event={event} delay={index * 80} />)}
           </div>
@@ -107,6 +112,7 @@ export default function XPosure() {
           <FadeIn>
             <InitiativeSectionHeader eyebrow="The archive" title="Past events" />
           </FadeIn>
+          {!loading && !error && pastEvents.length === 0 && <p className="text-slate-500">No past events published yet.</p>}
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {pastEvents.map((event, index) => <EventCard key={event.id} event={event} delay={index * 80} />)}
           </div>

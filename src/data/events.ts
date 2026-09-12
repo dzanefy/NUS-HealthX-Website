@@ -18,6 +18,8 @@ export interface XPosureEvent {
   tags: string[];
   registerUrl?: string;
   upcoming: boolean;
+  acknowledgements?: string;
+  articleImageUrl?: string;
 }
 
 export const xposureEvents: XPosureEvent[] = [

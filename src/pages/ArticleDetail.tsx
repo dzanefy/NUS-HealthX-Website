@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import { useParams, Link } from 'react-router';
-import { xposureEvents } from '../data/events';
+import { useEvents } from '../hooks/useEvents';
 import FadeIn from '../components/FadeIn';
 
 /* Maps event slugs to a second editorial image (different crop/angle) */
@@ -19,9 +20,23 @@ const editorialImages: Record<string, string> = {
 const fallbackEditorial =
   'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=900&h=550&fit=crop&auto=format';
 
+function ArticleImage({ src, title }: { src: string; title: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return <p className="my-10 text-sm text-slate-500" role="status">Event photo is currently unavailable.</p>;
+  return <figure className="my-10">
+    <div className="overflow-hidden rounded-2xl border border-navy-100 bg-slate-50">
+      <img src={src} alt={`${title} event photo`} loading="lazy" onError={() => setFailed(true)} className="mx-auto max-h-[640px] w-full object-contain" />
+    </div>
+  </figure>;
+}
+
 export default function ArticleDetail() {
   const { slug } = useParams<{ slug: string }>();
+  const { events: xposureEvents, loading, error, retry } = useEvents();
   const event = xposureEvents.find(e => e.slug === slug);
+
+  if (loading) return <div role="status" className="min-h-[60vh] px-6 pt-40 text-center">Loading event…</div>;
+  if (error) return <div role="alert" className="min-h-[60vh] px-6 pt-40 text-center">We couldn’t load this event. <button onClick={retry} className="underline">Try again</button></div>;
 
   if (!event) {
     return (
@@ -38,11 +53,13 @@ export default function ArticleDetail() {
   }
 
   const related = xposureEvents.filter(e => e.slug !== slug).slice(0, 3);
-  const inlineImage = editorialImages[event.slug] ?? fallbackEditorial;
+  const inlineImage = event.slug.startsWith('event-')
+    ? event.articleImageUrl
+    : editorialImages[event.slug] ?? fallbackEditorial;
 
   /* Split body: intro paragraphs, pull-quote source, inline image zone, rest */
   const [firstPara, secondPara, ...restParas] = event.body;
-  const pullQuote = secondPara
+  const pullQuote = secondPara && !event.slug.startsWith('event-')
     ? secondPara.split('.').filter(s => s.trim().length > 40)[0]?.trim() + '.'
     : null;
   const midParas = restParas.slice(0, Math.ceil(restParas.length / 2));
@@ -51,16 +68,9 @@ export default function ArticleDetail() {
   return (
     <div className="bg-white">
 
-      {/* Hero with grain and photo overlay */}
+      {/* Compact event heading; thumbnail placeholders belong on listing cards. */}
       <section className="grain-bg relative overflow-hidden">
-        <img
-          src={event.thumbnail}
-          alt={event.title}
-          className="absolute inset-0 w-full h-full object-cover opacity-15"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020d1e]/70 to-transparent" />
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 pt-20 pb-16">
+        <div className="relative z-10 max-w-4xl mx-auto px-6 pt-32 pb-12">
           <Link
             to="/xposure"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-navy-400 hover:text-teal-400 transition-colors mb-8 uppercase tracking-widest"
@@ -167,18 +177,7 @@ export default function ArticleDetail() {
           </div>
 
           {/* Inline editorial image */}
-          <figure className="my-10 -mx-0">
-            <div className="rounded-2xl overflow-hidden aspect-[16/7] bg-navy-50">
-              <img
-                src={inlineImage}
-                  alt={`${event.title} event photo`}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <figcaption className="text-xs text-slate-400 mt-3 text-center italic">
-              {event.title} · {event.shortDate} · {event.location}
-            </figcaption>
-          </figure>
+          {inlineImage && <ArticleImage key={inlineImage} src={inlineImage} title={event.title} />}
 
           {/* Tail paragraphs */}
           <div className="space-y-5 mb-12">
@@ -187,6 +186,7 @@ export default function ArticleDetail() {
             ))}
           </div>
 
+          {event.acknowledgements && <section className="mb-8 border-t border-slate-100 pt-6"><h2 className="serif mb-3 text-2xl text-navy-950">Acknowledgements</h2><p className="whitespace-pre-line text-slate-600">{event.acknowledgements}</p></section>}
           {/* Tags */}
           <div className="pt-8 border-t border-slate-100 flex flex-wrap gap-2">
             <span className="text-xs font-bold uppercase tracking-widest text-slate-300 self-center mr-2">Tags</span>
