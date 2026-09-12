@@ -69,7 +69,7 @@ export default function XPerience() {
                 <article className="initiative-card h-full p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-950/8">
                   <span className="serif mb-4 block text-6xl font-bold text-navy-100">{num}</span>
                   <h3 className="serif mb-3 text-xl font-bold text-navy-950">{title}</h3>
-                  <p className="mb-3 text-xs font-bold uppercase tracking-widest text-teal-700">{period}</p>
+                  <p className="mb-3 text-xs font-bold uppercase tracking-widest text-brand-cyan">{period}</p>
                   <p className="text-sm leading-relaxed text-slate-500">{desc}</p>
                 </article>
               </FadeIn>

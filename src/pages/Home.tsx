@@ -153,7 +153,7 @@ export default function Home() {
         <div className="max-w-5xl">
           <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-white/12 bg-white/6 mb-10">
             <span className="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse flex-shrink-0" />
-            <span className="serif italic text-white/60 text-sm">NUS Registered Student Organisation</span>
+            <span className="serif italic text-white text-sm">NUS Registered Student Organisation</span>
             <span className="text-white/20 text-sm">·</span>
             <span className="text-white/40 text-xs font-medium tracking-wide">Est. 2024</span>
           </div>

@@ -60,7 +60,7 @@ export function InitiativeSectionHeader({
 }) {
   return (
     <div className="mb-10">
-      {eyebrow && <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-teal-600">{eyebrow}</p>}
+      {eyebrow && <p className="mb-3 text-xs font-bold uppercase tracking-[0.3em] text-brand-cyan">{eyebrow}</p>}
       <h2 className="serif text-4xl font-bold text-navy-950 md:text-5xl">{title}</h2>
     </div>
   );

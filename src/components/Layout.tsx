@@ -181,7 +181,7 @@ export default function Layout() {
       <footer className="grain-bg site-footer overflow-hidden">
         {/* Big brand text */}
         <div className="max-w-7xl mx-auto px-6 pt-16 pb-4">
-          <p className="text-[clamp(56px,10vw,140px)] font-black text-white/8 leading-none select-none whitespace-nowrap">
+          <p className="text-[clamp(40px,9vw,140px)] font-black text-white/35 leading-none select-none whitespace-nowrap">
             NUS HealthX
           </p>
         </div>
@@ -212,7 +212,7 @@ export default function Layout() {
               </div>
             </div>
             <div>
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-5">Pages</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-5">Pages</h3>
               <ul className="space-y-3">
                 {[
                   { to: '/about', label: 'About' },
@@ -230,7 +230,7 @@ export default function Layout() {
               </ul>
             </div>
             <div>
-              <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-5">Connect</h3>
+              <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-5">Connect</h3>
               <ul className="space-y-3">
                 {['LinkedIn', 'Instagram', 'Telegram', 'Email us'].map(s => (
                   <li key={s}><a href="#" className="text-sm text-slate-400 hover:text-white transition-colors">{s}</a></li>
@@ -239,8 +239,8 @@ export default function Layout() {
             </div>
           </div>
           <div className="border-t border-white/8 max-w-7xl mx-auto px-6 py-5 flex flex-col sm:flex-row justify-between gap-2">
-            <p className="text-xs text-slate-600">© 2026 NUS HealthX. All rights reserved.</p>
-            <p className="text-xs text-slate-600">NUS Registered Student Organisation</p>
+            <p className="text-xs text-white">© 2026 NUS HealthX. All rights reserved.</p>
+            <p className="text-xs text-white">NUS Registered Student Organisation</p>
           </div>
         </div>
       </footer>

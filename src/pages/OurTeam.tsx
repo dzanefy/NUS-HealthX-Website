@@ -68,7 +68,7 @@ function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
 function SectionHeading({ title, description }: { title: string; description?: string }) {
   return (
     <FadeIn className="mb-12 text-center">
-      <h2 className="text-5xl font-semibold tracking-tight text-slate-950 md:text-6xl">{title}</h2>
+      <h2 className="serif text-4xl font-bold tracking-tight text-navy-950 md:text-5xl">{title}</h2>
       {description && <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-500">{description}</p>}
     </FadeIn>
   );

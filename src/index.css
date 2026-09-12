@@ -2,23 +2,26 @@
 @import 'tailwindcss';
 
 @theme {
+  --color-brand-hero: #0b48ad;
+  --color-brand-cyan: #15b7ee;
   --color-navy-50: #f0f4ff;
   --color-navy-100: #dce8ff;
   --color-navy-200: #c0d3ff;
   --color-navy-300: #91b4fd;
   --color-navy-400: #5d8af9;
-  --color-navy-500: #3662f2;
-  --color-navy-600: #2041e7;
-  --color-navy-700: #1932d4;
-  --color-navy-800: #1a2bac;
-  --color-navy-900: #1b2c87;
-  --color-navy-950: #0d2e6e;
+  --color-navy-500: #227bd9;
+  --color-navy-600: #054db2;
+  --color-navy-700: #083ab8;
+  --color-navy-800: #03298c;
+  --color-navy-900: #003d7c;
+  --color-navy-950: #003496;
   --color-teal-50: #ecfeff;
   --color-teal-100: #cffafe;
-  --color-teal-400: #22d3ee;
-  --color-teal-500: #06b6d4;
-  --color-teal-600: #0891b2;
-  --color-teal-700: #0e7490;
+  --color-teal-300: #5ce2ff;
+  --color-teal-400: #62d4ff;
+  --color-teal-500: #15b7ee;
+  --color-teal-600: #0078a3;
+  --color-teal-700: #00688f;
 }
 
 html, body, #root {
@@ -92,26 +95,28 @@ main > div.bg-slate-50.px-6.py-16 {
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 80% 10%, rgba(6,182,212,0.55) 0%, transparent 48%),
-    radial-gradient(ellipse at 10% 75%, rgba(29,78,216,0.55) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 85%, rgba(99,102,241,0.30) 0%, transparent 42%),
-    radial-gradient(ellipse at 50% 40%, rgba(13,46,110,0.60) 0%, transparent 55%),
-    #020d1e;
+    radial-gradient(ellipse at 90% 15%, #15b7ee55 0%, transparent 55%),
+    linear-gradient(115deg, var(--color-brand-hero) 0%, #054db2 55%, #0078a3 100%);
 }
 
 /* Bottom calls to action ease from the white page into the shared dark footer. */
 .cta-section {
   background:
     linear-gradient(to bottom, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.42) 48px, rgba(255,255,255,0) 170px),
-    radial-gradient(ellipse at 80% 10%, rgba(6,182,212,0.55) 0%, transparent 48%),
-    radial-gradient(ellipse at 10% 75%, rgba(29,78,216,0.55) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 85%, rgba(99,102,241,0.30) 0%, transparent 42%),
-    radial-gradient(ellipse at 50% 40%, rgba(13,46,110,0.60) 0%, transparent 55%),
-    #020d1e;
+    linear-gradient(115deg, var(--color-brand-hero) 0%, #054db2 55%, #0078a3 100%);
 }
 
 .site-footer {
   margin-top: -1px;
+}
+
+/* Keep secondary copy legible on the brighter brand gradients. */
+.site-footer .text-slate-400 { color: #ffffff; }
+.grain-bg .text-slate-300,
+.grain-bg .text-slate-400 { color: #eef7ff; }
+
+@media (prefers-reduced-motion: reduce) {
+  .grain-bg::after { animation: none; }
 }
 
 /* Animated blob layer floats behind content */
@@ -122,9 +127,9 @@ main > div.bg-slate-50.px-6.py-16 {
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 50% 40% at 70% 60%, rgba(6,182,212,0.65) 0%, transparent 100%),
-    radial-gradient(ellipse 55% 45% at 15% 30%, rgba(29,78,216,0.60) 0%, transparent 100%),
-    radial-gradient(ellipse 40% 35% at 50% 90%, rgba(99,102,241,0.45) 0%, transparent 100%);
+    radial-gradient(ellipse 50% 40% at 70% 60%, #15b7ee22 0%, transparent 100%),
+    radial-gradient(ellipse 55% 45% at 15% 30%, #03298c33 0%, transparent 100%),
+    radial-gradient(ellipse 40% 35% at 50% 90%, #2e9aea22 0%, transparent 100%);
   animation: grainWave 10s ease-in-out infinite;
   filter: blur(12px);
 }
@@ -143,7 +148,7 @@ main > div.bg-slate-50.px-6.py-16 {
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.18;
+  opacity: 0.07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.80' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 180px 180px;
 }
