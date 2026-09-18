@@ -19,7 +19,7 @@ export interface XPosureEvent {
   registerUrl?: string;
   upcoming: boolean;
   acknowledgements?: string;
-  articleImageUrl?: string;
+  articleImageUrls?: string[];
   category?: string;
   subPillar?: string;
   audience?: string;

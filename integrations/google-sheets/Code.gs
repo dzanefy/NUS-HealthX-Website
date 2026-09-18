@@ -28,6 +28,8 @@ function setupSheet() {
   sheet.getRange('A1').setNote('Use a unique ID such as EVT-001. Never change it after syncing.');
   sheet.getRange('E1').setNote('Use YYYY-MM-DD, e.g. 2026-09-09.');
   sheet.getRange('L1').setNote('One speaker per line: Name | Job title | Organisation');
+  sheet.getRange('H1').setNote('Public HTTPS image URL for the event cover.');
+  sheet.getRange('N1').setNote('Up to two public HTTPS photo URLs, one per line in this cell. Leave blank to omit article photos.');
   sheet.getRange('K1').setNote('Only Published is visible. Deleted rows are hidden after a successful sync.');
   sheet.getRange('O2:O1000').setDataValidation(SpreadsheetApp.newDataValidation()
     .requireValueInList(EVENT_TYPES, true).setAllowInvalid(false).build());
@@ -59,7 +61,9 @@ function parseEvents(values) {
     if (date && (!/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(Date.parse(date)) || new Date(date).toISOString().slice(0, 10) !== date)) fail('Use a valid date in YYYY-MM-DD format.');
     if (upcoming && !['TRUE', 'FALSE'].includes(upcoming.toUpperCase())) fail('Upcoming must be TRUE or FALSE.');
     if (status === 'Published' && !upcoming) fail('Select TRUE or FALSE for Upcoming.');
-    for (const url of [image, registration, articleImage]) {
+    const articleImages = articleImage.split(/\r?\n/).map(url => url.trim()).filter(Boolean);
+    if (articleImages.length > 2) fail('Article Image URL accepts up to two image links, one per line.');
+    for (const url of [image, registration, ...articleImages]) {
       if (url && !/^https:\/\/[^\s/]+(?:\/[^\s]*)?$/.test(url)) fail('Image and registration links must be full HTTPS URLs.');
     }
     const speakers = speakerText ? speakerText.split('\n').filter(Boolean).map(line => {
@@ -69,7 +73,7 @@ function parseEvents(values) {
     }) : [];
     return [{ sheet_event_id: id, title: title || 'Untitled event', summary,
       description: article, event_date: date || null, event_time: time,
-      location, image_url: image || null, article_image_url: articleImage || null, registration_url: registration || null,
+      location, image_url: image || null, article_image_url: articleImages.join('\n') || null, registration_url: registration || null,
       is_upcoming: upcoming.toUpperCase() === 'TRUE', status, speakers, acknowledgements,
       category, sub_pillar: subPillar, audience }];
   });

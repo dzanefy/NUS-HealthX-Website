@@ -105,3 +105,22 @@ test('invalid article image stops sync', () => {
   const h = harness(); h.context.values[1][13] = 'file:///photo.jpg';
   assert.throws(() => h.context.syncEvents()); assert.equal(h.calls(), 0);
 });
+
+test('two article photos preserve order and remain separate from the cover', () => {
+  const h = harness();
+  h.context.values[1][7] = 'https://example.com/cover.jpg';
+  h.context.values[1][13] = ' https://example.com/first.jpg\r\n\n https://example.com/second.jpg ';
+  h.context.syncEvents();
+  assert.equal(h.context.payload[0].image_url, 'https://example.com/cover.jpg');
+  assert.equal(h.context.payload[0].article_image_url, 'https://example.com/first.jpg\nhttps://example.com/second.jpg');
+});
+
+test('invalid second photo or more than two photos stops all writes', () => {
+  for (const photos of [
+    'https://example.com/first.jpg\njavascript:alert(1)',
+    'https://example.com/first.jpg\nhttps://example.com/second.jpg\nhttps://example.com/third.jpg',
+  ]) {
+    const h = harness(); h.context.values[1][13] = photos;
+    assert.throws(() => h.context.syncEvents()); assert.equal(h.calls(), 0);
+  }
+});

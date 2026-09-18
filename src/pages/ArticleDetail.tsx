@@ -54,9 +54,12 @@ export default function ArticleDetail() {
   }
 
   const related = xposureEvents.filter(e => e.slug !== slug).slice(0, 3);
-  const inlineImage = event.slug.startsWith('event-')
-    ? event.articleImageUrl
-    : editorialImages[event.slug] ?? fallbackEditorial;
+  const articleImages = event.slug.startsWith('event-')
+    ? event.articleImageUrls ?? []
+    : [editorialImages[event.slug] ?? fallbackEditorial];
+  const usePhotoPair = articleImages.length > 1 && event.body.length < 2;
+  const introImage = articleImages.length > 1 && !usePhotoPair ? articleImages[0] : undefined;
+  const inlineImage = articleImages.length > 1 ? articleImages[1] : articleImages[0];
 
   /* Split body: intro paragraphs, pull-quote source, inline image zone, rest */
   const [firstPara, secondPara, ...restParas] = event.body;
@@ -150,6 +153,8 @@ export default function ArticleDetail() {
             </FadeIn>
           )}
 
+          {introImage && <ArticleImage key={introImage} src={introImage} title={event.title} />}
+
           {/* Second paragraph */}
           {secondPara && (
             <p className="text-slate-600 leading-relaxed mb-8 text-[1.0625rem]">{secondPara}</p>
@@ -180,7 +185,11 @@ export default function ArticleDetail() {
           </div>
 
           {/* Inline editorial image */}
-          {inlineImage && <ArticleImage key={inlineImage} src={inlineImage} title={event.title} />}
+          {usePhotoPair ? (
+            <div className="grid gap-5 sm:grid-cols-2 [&_figure]:my-0 mb-10">
+              {articleImages.map((src, i) => <ArticleImage key={`${src}-${i}`} src={src} title={event.title} />)}
+            </div>
+          ) : inlineImage && <ArticleImage key={inlineImage} src={inlineImage} title={event.title} />}
 
           {/* Tail paragraphs */}
           <div className="space-y-5 mb-12">

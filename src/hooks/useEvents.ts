@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { xposureEvents, type XPosureEvent } from '../data/events';
+import eventMedia from '../data/eventMedia';
 
 // Local content remains available in environments without a database connection.
 export function useEvents() {
@@ -18,7 +19,7 @@ export function useEvents() {
       try {
         const { data, error: queryError } = await supabase!
           .from('events')
-          .select('id,title,summary,description,speakers,acknowledgements,event_date,event_time,location,image_url,article_image_url,registration_url,is_upcoming,category,sub_pillar,audience')
+          .select('id,sheet_event_id,title,summary,description,speakers,acknowledgements,event_date,event_time,location,image_url,article_image_url,registration_url,is_upcoming,category,sub_pillar,audience')
           .eq('status', 'Published')
           .order('event_date', { ascending: false, nullsFirst: false })
           .abortSignal(controller.signal);
@@ -31,8 +32,12 @@ export function useEvents() {
           shortDate: [row.event_date ? new Date(`${row.event_date}T12:00:00`).toLocaleDateString('en-SG', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Date to be confirmed', row.event_time].filter(Boolean).join(' · '),
           dateISO: row.event_date ?? '',
           location: row.location || 'Location to be confirmed',
-          thumbnail: safeUrl(row.image_url) ?? '/event-placeholder.svg',
-          articleImageUrl: safeUrl(row.article_image_url),
+          thumbnail: safeUrl(row.image_url) ?? eventMedia[row.sheet_event_id]?.cover ?? '/event-placeholder.svg',
+          articleImageUrls: row.article_image_url?.trim()
+            ? row.article_image_url.split(/\r?\n/)
+              .map((value: string) => safeUrl(value.trim()))
+              .filter((value: string | undefined): value is string => Boolean(value)).slice(0, 2)
+            : eventMedia[row.sheet_event_id]?.article ?? [],
           excerpt: row.summary || '',
           body: row.description ? row.description.split(/\n\s*\n/) : [],
           speakers: Array.isArray(row.speakers) ? row.speakers.filter((s: unknown): s is { name: string; title: string; affiliation: string } => {
