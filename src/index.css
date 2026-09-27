@@ -188,8 +188,6 @@ main > div.bg-slate-50.px-6.py-16 {
   -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
 }
 
-.partner-marquee-track:hover { animation-play-state: paused; }
-
 @media (prefers-reduced-motion: reduce) {
   .marquee-left,
   .marquee-right { animation: none; }

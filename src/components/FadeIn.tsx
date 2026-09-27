@@ -1,14 +1,13 @@
-import { useEffect, useRef, type ReactNode, type JSX } from 'react';
+import { useEffect, useRef, type ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
   delay?: number;       // ms stagger
   className?: string;
-  as?: keyof JSX.IntrinsicElements;
 }
 
-export default function FadeIn({ children, delay = 0, className = '', as: Tag = 'div' }: Props) {
-  const ref = useRef<HTMLElement>(null);
+export default function FadeIn({ children, delay = 0, className = '' }: Props) {
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -27,9 +26,8 @@ export default function FadeIn({ children, delay = 0, className = '', as: Tag = 
   }, [delay]);
 
   return (
-    // @ts-ignore: dynamic tag
-    <Tag ref={ref} className={`fade-up ${className}`}>
+    <div ref={ref} className={`fade-up ${className}`}>
       {children}
-    </Tag>
+    </div>
   );
 }

@@ -115,7 +115,7 @@ export default function About() {
             <p className="mb-12 text-xs font-bold uppercase tracking-[0.3em] text-navy-600">Our partners and sponsors include</p>
           </FadeIn>
           <div className="partner-marquee">
-            <div className="partner-marquee-track marquee-right flex w-max items-center gap-8 py-3 sm:gap-14">
+            <div className="marquee-right flex w-max items-center gap-8 py-3 sm:gap-14">
               {[...partners, ...partners].map(({ name, image }, i) => (
                 <div key={`${name}-${i}`} className="flex h-24 w-52 shrink-0 items-center justify-center px-3 sm:w-60">
                   <img src={image} alt={name} className="max-h-20 w-full object-contain" />
