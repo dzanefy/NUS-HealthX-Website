@@ -1,5 +1,22 @@
 # Xcelerate applications → Google Sheets
 
+## Live setup
+
+- [Applications sheet](https://docs.google.com/spreadsheets/d/1v_oEa3EVxZnmzU1tvqYiqQ3zDyf4krhFPaK9gBbJ5QY/edit#gid=800835914)
+- [Website application form](https://nus-health-x-website.vercel.app/xcelerate/apply)
+- [Private Apps Script project](https://script.google.com/d/16_XJtWquFRhoemjXngWoeRmtasKzlydJ4s61qd0H8MGNLE92puTZ50Sz/edit)
+
+Google authorization completed. On 2 October 2026, the production Vercel API
+confirmed a saved test application with a sample PDF, then acknowledged a retry
+with the same application ID. The test is labelled **TEST — HealthX integration
+check** and uses `healthx-integration-test@example.com`; it is not a real applicant.
+Invalid submissions return an error. Server credentials are configured in Vercel.
+The sheet remains private; open it using the owning Google account or an account
+the owner has explicitly shared it with.
+
+The setup instructions below are for a new installation; do not create another
+sheet or regenerate credentials for this existing deployment.
+
 The React form posts to `/api/xcelerate`. A server-only handler sends it to a
 separate private Apps Script project. Each confirmed submission adds one row to
 the Applications tab and saves the résumé in a private Google Drive folder.
