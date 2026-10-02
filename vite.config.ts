@@ -1,7 +1,8 @@
-import { defineConfig, type HtmlTagDescriptor, type Plugin } from 'vite'
+import { defineConfig, loadEnv, type HtmlTagDescriptor, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
+import submitApplication from './server/xcelerate.mjs'
 
 // Figma Make provides this file locally, but dotfiles may not be included in
 // external deployment checkouts. Keep safe defaults here so Vercel can build
@@ -18,6 +19,7 @@ const siteConfiguration: FigmaSiteConfiguration = {
 export default defineConfig(({ mode }) => {
   // .figma/make/deploy-preview passes `--mode development` for cached-preview builds.
   const emitSourcemaps = mode === 'development'
+  const applicationEnv = loadEnv(mode, process.cwd(), 'XCELERATE_')
 
   return {
     base: process.env.FIGMA_PUBLIC_URL ? `${process.env.FIGMA_PUBLIC_URL}/` : '/',
@@ -26,6 +28,14 @@ export default defineConfig(({ mode }) => {
       minify: !emitSourcemaps,
     },
     plugins: [
+      {
+        name: 'xcelerate-applications',
+        configureServer(server) {
+          server.middlewares.use('/api/xcelerate', (req, res) => {
+            void submitApplication(req, res, applicationEnv)
+          })
+        },
+      },
       react(),
       tailwindcss(),
       figmaSiteConfiguration(siteConfiguration),

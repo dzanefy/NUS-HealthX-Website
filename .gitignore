@@ -18,3 +18,8 @@ logs/
 # beside it.
 /.plugins/
 /.opencode-skills/
+.vercel
+
+# Private Xcelerate Apps Script provisioning
+integrations/xcelerate/.clasp.json
+integrations/xcelerate/Bootstrap.gs
