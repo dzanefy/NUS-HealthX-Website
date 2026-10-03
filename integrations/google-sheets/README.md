@@ -3,6 +3,8 @@
 For Xcelerate sign-up submissions and résumé links, see the separate
 [Xcelerate applications setup](../xcelerate/README.md). This event sync does not collect applications.
 
+For student mentorship applications, see the separate [X’perts applications sheet and setup](../xperts/README.md).
+
 Google Sheets is the event editing source. A private Google Apps Script sends rows to Supabase approximately every five minutes. The public X’posure listing, article pages, and Timeline read the same published records on page load. The Timeline groups events by month, newest first, and links to their articles. No website rebuild is needed for event edits after setup.
 
 ## One time setup for the maintainer

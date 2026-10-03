@@ -1,7 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "functions": {
-    "api/xcelerate.mjs": { "maxDuration": 60 }
+    "api/xcelerate.mjs": { "maxDuration": 60 },
+    "api/xperts.ts": { "maxDuration": 60 }
   },
   "routes": [
     { "handle": "filesystem" },

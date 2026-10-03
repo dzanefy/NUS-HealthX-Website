@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'node:path'
 import submitApplication from './server/xcelerate.mjs'
+import submitXperts from './server/xperts.ts'
 
 // Figma Make provides this file locally, but dotfiles may not be included in
 // external deployment checkouts. Keep safe defaults here so Vercel can build
@@ -33,6 +34,9 @@ export default defineConfig(({ mode }) => {
         configureServer(server) {
           server.middlewares.use('/api/xcelerate', (req, res) => {
             void submitApplication(req, res, applicationEnv)
+          })
+          server.middlewares.use('/api/xperts', (req, res) => {
+            void submitXperts(req, res, applicationEnv)
           })
         },
       },

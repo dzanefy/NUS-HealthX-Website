@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router';
 import { mentors, type Mentor } from '../data/mentors';
 import FadeIn from '../components/FadeIn';
 
@@ -61,6 +62,7 @@ export default function Mentors() {
         <p className="text-navy-200 text-xl max-w-2xl mx-auto leading-relaxed">
           A distinguished network of clinicians, entrepreneurs, and healthcare innovators who provide mentorship, expertise, and real-world perspective to HealthX members.
         </p>
+        <Link to="/xperts/apply" className="mt-8 inline-flex rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 transition hover:bg-teal-50">Apply for X’perts mentorship →</Link>
       </section>
 
       {/* ── CAROUSEL ── */}

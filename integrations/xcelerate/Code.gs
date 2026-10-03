@@ -53,6 +53,8 @@ function doPost(e) {
   let data;
   try { data = JSON.parse(e.postData.contents); } catch { return json({ invalid: true }); }
   if (!data || !props.getProperty('APPLICATIONS_SECRET') || data.secret !== props.getProperty('APPLICATIONS_SECRET')) return json({ ok: false });
+  if (data.program === 'xperts-setup') return json(setupXpertsApplications());
+  if (data.program === 'xperts') return json(saveXpertsApplication(data));
   try { validateApplication(data); } catch { return json({ invalid: true }); }
   const lock = LockService.getScriptLock();
   if (!lock.tryLock(10000)) return json({ ok: false });

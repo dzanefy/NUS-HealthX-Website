@@ -10,6 +10,7 @@ export type InitiativePageConfig = {
   title: string;
   heroDescription: string;
   ctaLabel: string;
+  ctaHref?: string;
   purpose: string;
   pillarsHeading: string;
   cards: InitiativeCard[];
@@ -110,7 +111,7 @@ export default function InitiativePage({ config }: { config: InitiativePageConfi
 
   return (
     <div className="bg-white">
-      <InitiativeHero title={config.title} description={config.heroDescription} ctaLabel={config.ctaLabel} ctaHref="#get-involved" />
+      <InitiativeHero title={config.title} description={config.heroDescription} ctaLabel={config.ctaLabel} ctaHref={config.ctaHref ?? '#get-involved'} />
 
       <section id="content" className="px-6 py-24">
         <div className="mx-auto max-w-6xl">

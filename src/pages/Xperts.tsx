@@ -3,7 +3,8 @@ import InitiativePage, { type InitiativePageConfig } from './InitiativePage';
 const config: InitiativePageConfig = {
   title: "X'perts",
   heroDescription: 'A flexible way for students to learn from people already building, treating, researching, and investing in healthcare.',
-  ctaLabel: 'Become an expert',
+  ctaLabel: 'Apply for mentorship',
+  ctaHref: '/xperts/apply',
   purpose: "X'perts is a curated network that connects students with clinicians, researchers, engineers, founders, and investors. Students share what they are trying to learn; experts choose a format and level of involvement that works for them.\n\nThe result is focused, useful contact rather than another networking event. There is no expectation to hire, invest, supervise, or refer.",
   pillarsHeading: 'Ways to contribute',
   cards: [

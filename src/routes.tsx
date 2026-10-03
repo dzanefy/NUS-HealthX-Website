@@ -8,6 +8,7 @@ import XPerience from './pages/XPerience';
 import Xcelerate from './pages/Xcelerate';
 import XcelerateApply from './pages/XcelerateApply';
 import Xperts from './pages/Xperts';
+import XpertsApply from './pages/XpertsApply';
 import Xchange from './pages/Xchange';
 import OurTeam from './pages/OurTeam';
 import Mentors from './pages/Mentors';
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
       { path: 'xcelerate', Component: Xcelerate },
       { path: 'xcelerate/apply', Component: XcelerateApply },
       { path: 'xperts', Component: Xperts },
+      { path: 'xperts/apply', Component: XpertsApply },
       { path: 'xchange', Component: Xchange },
       { path: 'our-team', Component: OurTeam },
       { path: 'mentors', Component: Mentors },
