@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import FadeIn from '../components/FadeIn';
+import advisorPortrait from '../assets/team/dinesh-kumar-srinivasan.png';
 
 const photoBaseUrl = 'https://xtwnqhnieobozjctwifp.supabase.co/storage/v1/object/public/team-photos/';
 const teamPhotoUrl = `${photoBaseUrl}healthx-team-2026-2027.png`;
@@ -50,6 +51,8 @@ type TeamPerson = {
   role: string;
   study: string;
   initials: string;
+  photoUrl?: string;
+  email?: string;
 };
 
 const teams: { id: string; name: string; members: TeamPerson[] }[] = [
@@ -93,10 +96,12 @@ const teams: { id: string; name: string; members: TeamPerson[] }[] = [
 
 const advisors: TeamPerson[] = [
   {
-    name: 'Dr Ian Mathews',
-    role: 'Key Clinician Advisor',
-    study: 'Deputy Group CTO, NUHS · Senior Consultant, Emergency Medicine, NUH · Assistant Professor, YLL School of Medicine',
-    initials: 'IM',
+    name: 'Associate Professor Dinesh Kumar, Srinivasan',
+    role: 'HealthX Advisor',
+    study: 'Medical Science Lead for CVS · Lead for Continuing Education & Training (CET)',
+    initials: 'DK',
+    photoUrl: advisorPortrait,
+    email: 'dineshkumar@nus.edu.sg',
   },
 ];
 
@@ -115,12 +120,13 @@ function LinkedInIcon() {
 function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
   const [photoFailed, setPhotoFailed] = useState(false);
   const photoFile = portraitFiles[person.name];
+  const photoUrl = person.photoUrl || (photoFile ? `${photoBaseUrl}${photoFile}` : undefined);
   return (
     <FadeIn delay={index * 80}>
       <article className="group text-center">
         <div className="initiative-card relative flex aspect-square items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-navy-950/8">
-          {photoFile && !photoFailed ? (
-            <img src={`${photoBaseUrl}${photoFile}`} alt={person.name} loading="lazy" onError={() => setPhotoFailed(true)} className={`absolute inset-0 h-full w-full object-cover ${person.name === 'Darren Chung' ? 'object-top' : person.name === 'Ng Chen Meng' ? 'object-[center_55%]' : 'object-bottom'}`} />
+          {photoUrl && !photoFailed ? (
+            <img src={photoUrl} alt={person.name} loading="lazy" onError={() => setPhotoFailed(true)} className={`absolute inset-0 h-full w-full ${person.photoUrl ? 'bg-white object-contain' : `object-cover ${person.name === 'Darren Chung' ? 'object-top' : person.name === 'Ng Chen Meng' ? 'object-[center_55%]' : 'object-bottom'}`}`} />
           ) : (
             <span className="text-5xl font-semibold tracking-tight text-navy-200 transition-colors duration-300 group-hover:text-navy-300">{person.initials}</span>
           )}
@@ -129,7 +135,9 @@ function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
           <h3 className="text-xl font-semibold leading-tight text-navy-950">{person.name}</h3>
           <p className="mt-2 text-base leading-relaxed text-slate-500">{person.role}</p>
           <p className="mt-2 text-sm leading-relaxed text-slate-400">{person.study}</p>
-          <a
+          {person.email ? (
+            <a href={`mailto:${person.email}`} className="mt-4 inline-flex text-sm font-semibold text-navy-700 transition-colors hover:text-teal-600">{person.email}</a>
+          ) : <a
             href={linkedInSearch(person.name)}
             target="_blank"
             rel="noreferrer"
@@ -138,7 +146,7 @@ function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
           >
             <LinkedInIcon />
             LinkedIn
-          </a>
+          </a>}
         </div>
       </article>
     </FadeIn>
@@ -192,7 +200,7 @@ export default function OurTeam() {
       <section id="team-advisors" className="scroll-mt-28 bg-slate-50 px-6 py-28">
         <div className="mx-auto max-w-6xl">
           <SectionHeading title="Advisors" description="Guidance from clinicians and healthcare leaders who support the HealthX community." />
-          <div className="mx-auto grid max-w-3xl gap-12 md:grid-cols-2">
+          <div className="mx-auto grid max-w-sm gap-12">
             {advisors.map((person, index) => <PersonCard key={person.name} person={person} index={index} />)}
           </div>
         </div>
