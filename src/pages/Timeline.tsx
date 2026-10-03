@@ -211,7 +211,7 @@ export default function Timeline() {
           <p className="mb-4 text-xs font-bold uppercase tracking-widest text-teal-400">Stay in the loop</p>
           <h2 className="serif mb-4 text-4xl font-bold text-white">Stay updated</h2>
           <p className="mb-8 text-navy-200">Join our Telegram channel for first access to event registration and programme updates.</p>
-          <a href="#" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 transition-colors hover:bg-navy-50">Join Telegram <span aria-hidden="true">→</span></a>
+          <a href="https://t.me/nushealthx" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 transition-colors hover:bg-navy-50">Join Telegram <span aria-hidden="true">→</span></a>
         </div>
       </section>
     </div>

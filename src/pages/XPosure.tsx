@@ -153,7 +153,7 @@ export default function XPosure() {
         title="Stay close to the conversation"
         description="Join the HealthX Telegram channel for upcoming event announcements, registration links, and community updates."
         ctaLabel="Join Telegram"
-        href="#"
+        href="https://t.me/nushealthx"
       />
     </div>
   );

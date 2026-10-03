@@ -116,7 +116,7 @@ export default function XPerience() {
         title="Stay in the loop"
         description="Join the HealthX Telegram channel for programme updates, event announcements, and registration links."
         ctaLabel="Join Telegram"
-        href="#"
+        href="https://t.me/nushealthx"
       />
     </div>
   );

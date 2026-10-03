@@ -214,7 +214,7 @@ export default function OurTeam() {
           <div className="mb-10 flex flex-wrap justify-center gap-2">
             {['Medicine', 'Engineering', 'Business', 'Computing', 'Design', 'Science', 'Law', 'Pharmacy', 'Dentistry'].map(d => <span key={d} className="cursor-default rounded-full border border-white/15 px-4 py-1.5 text-sm text-slate-300 transition-colors hover:border-teal-400 hover:text-teal-400">{d}</span>)}
           </div>
-          <a href="#" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 transition-colors hover:bg-navy-50">Join us on Telegram <span aria-hidden="true">→</span></a>
+          <a href="https://t.me/nushealthx" className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 transition-colors hover:bg-navy-50">Join us on Telegram <span aria-hidden="true">→</span></a>
         </div>
       </section>
     </div>
