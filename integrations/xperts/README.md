@@ -8,7 +8,7 @@ Each application records student details, either project details or a reason for
 seeking mentorship, and one to three ranked mentor choices with individual
 reasons. The form and server use the current `src/data/mentors.ts` directory.
 Students cannot select duplicate mentors or submit without explaining a choice.
-No résumé is required. Matching depends on availability and fit.
+An optional PDF résumé up to 2 MiB can be uploaded. It is stored in the private HealthX Xperts Resumes folder and linked in column R (Resume). Matching depends on availability and fit.
 
 The private **HealthX Xperts Applications** spreadsheet is separate from
 Xcelerate. It uses the existing authorized Apps Script intake project under
@@ -29,7 +29,7 @@ code. `/api/xperts` always sets the X’perts program selector server-side.
    the existing web-app deployment version. Then deploy the website. Keeping the
    current deployment ID preserves the server URL and Xcelerate integration.
 
-`setupXpertsApplications` creates and formats the private sheet once and reuses it
+`setupXpertsApplications` creates and formats the private sheet once, appends the Resume column to existing sheets without changing their application rows, and reuses it
 thereafter. Its authenticated `xperts-setup` operation is for maintainer setup only;
 the public website API never forwards this operation.
 

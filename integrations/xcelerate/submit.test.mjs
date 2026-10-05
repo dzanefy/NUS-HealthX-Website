@@ -47,6 +47,8 @@ test('rejects missing secret, null data, invalid fields and disguised files', ()
   assert.equal(s.post({ ...application(), secret: '' }).ok, false);
   assert.equal(s.post({ ...application(), email: 'invalid' }).invalid, true);
   assert.equal(s.post({ ...application(), resume: { name: 'fake.pdf', base64: 'YWJj' } }).invalid, true);
+  for (const name of ['sample.doc', 'sample.docx']) assert.equal(s.post({ ...application(), resume: { ...application().resume, name } }).invalid, true);
+  assert.equal(s.post({ ...application(), resume: null }).invalid, true);
   assert.equal(s.rows.length, 0);
   assert.equal(s.files.length, 0);
 });

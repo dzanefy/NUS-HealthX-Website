@@ -36,9 +36,9 @@ export default function XcelerateApply() {
       !(resume instanceof File) ||
       !resume.size ||
       resume.size > 2 * 1024 * 1024 ||
-      !/\.(pdf|doc|docx)$/i.test(resume.name)
+      !/\.(pdf)$/i.test(resume.name)
     ) {
-      setError("Please upload a PDF or Word résumé smaller than 2 MB.")
+      setError("Please upload a PDF résumé smaller than 2 MB.")
       return
     }
     busy.current = true
@@ -216,12 +216,12 @@ export default function XcelerateApply() {
                   name="resume"
                   required
                   type="file"
-                  accept=".pdf,.doc,.docx"
+                  accept=".pdf,application/pdf"
                   className="mt-2 block w-full rounded-xl border border-dashed border-navy-200 bg-slate-50 p-4 font-normal"
                 />
               </label>
               <p className="mt-2 text-xs text-slate-500">
-                PDF or Word document, up to 2 MB. Your résumé is shared with the
+                PDF document, up to 2 MB. Your résumé is shared with the
                 HealthX team for application review.
               </p>
               <label className="mt-6 block text-sm font-bold text-navy-950">

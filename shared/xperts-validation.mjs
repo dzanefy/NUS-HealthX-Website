@@ -25,5 +25,13 @@ export default function validateXperts(data, mentorNames) {
     if (typeof choice.reason !== 'string' || !choice.reason.trim() || choice.reason.length > 2000) fail('Please explain each mentor choice (up to 2,000 characters).');
     return { id: choice.id, name: mentorNames[choice.id], reason: choice.reason.trim() };
   });
+  result.resume = null;
+  if (data.resume != null) {
+    const resume = data.resume;
+    if (typeof resume.name !== 'string' || resume.name.length > 200 || !/\.pdf$/i.test(resume.name) ||
+        typeof resume.base64 !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(resume.base64) ||
+        resume.base64.length > 2796204 || !resume.base64.startsWith('JVBERi0')) fail('Please upload a valid PDF résumé up to 2 MB.');
+    result.resume = { name: resume.name, base64: resume.base64 };
+  }
   return result;
 }

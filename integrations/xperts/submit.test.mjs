@@ -39,6 +39,17 @@ test('requires project details or motivation and validates student fields', () =
   }
 });
 
+test('optional resumes accept PDFs and reject Word files, disguised files and oversized payloads', () => {
+  const resume = { name: 'resume.pdf', base64: Buffer.from('%PDF-1.4 test').toString('base64') };
+  assert.equal(validate(fixture(), names).resume, null);
+  assert.deepEqual(validate({ ...fixture(), resume }, names).resume, resume);
+  for (const bad of [{ ...resume, name: 'resume.doc' }, { ...resume, name: 'resume.docx' },
+    { ...resume, base64: Buffer.from('not a pdf').toString('base64') },
+    { ...resume, base64: resume.base64 + 'A'.repeat(2796204) }]) {
+    assert.throws(() => validate({ ...fixture(), resume: bad }, names));
+  }
+});
+
 const generated = readFileSync(new URL('../xcelerate/XpertsValidation.gs', import.meta.url), 'utf8');
 test('deployed Google validation matches the current mentor directory and shared validator', () => {
   const context = vm.createContext({});
@@ -49,7 +60,7 @@ test('deployed Google validation matches the current mentor directory and shared
 });
 
 test('Google writer preserves all ranked choices, escapes formulas and deduplicates retry', () => {
-  const rows = []; let headers;
+  const rows = []; const files = []; let headers;
   const sheet = { getLastRow: () => rows.length + 1, appendRow: row => rows.push(row),
     getRange: () => ({ getValues: () => [headers], setNumberFormat() {},
       createTextFinder: id => ({ matchEntireCell: () => ({ findNext: () => rows.some(r => r[0] === id) }) }) }) };
@@ -57,6 +68,8 @@ test('Google writer preserves all ranked choices, escapes formulas and deduplica
     PropertiesService: { getScriptProperties: () => ({ getProperty: () => 'test-sheet' }) },
     SpreadsheetApp: { openById: () => ({ getSheetByName: () => sheet }), flush() {} },
     LockService: { getScriptLock: () => ({ tryLock: () => true, releaseLock() {} }) },
+    Utilities: { base64Decode: value => [...Buffer.from(value, 'base64')], newBlob: bytes => bytes },
+    DriveApp: { getFolderById: () => ({ getFilesByName: () => ({ hasNext: () => false }), createFile: bytes => { files.push(bytes); return { getUrl: () => 'https://drive.google.com/file/d/test-pdf/view' }; } }) },
   });
   vm.runInContext(generated + '\n' + readFileSync(new URL('../xcelerate/Xperts.gs', import.meta.url), 'utf8'), context);
   headers = vm.runInContext('XPERTS_HEADERS', context);
@@ -68,6 +81,13 @@ test('Google writer preserves all ranked choices, escapes formulas and deduplica
   assert.equal(rows[0][2], "'=1+1");
   assert.equal(rows[0][11], "'" + mentors[0].name);
   assert.equal(rows[0][15], "'" + mentors[2].name);
+  assert.equal(rows[0][17], '');
+  const withResume = { ...data, id: '19fac9f6-b75f-4bd7-ad21-0545d3a22e6e', resume: { name: 'sample.pdf', base64: Buffer.from('%PDF-1.4 test').toString('base64') } };
+  assert.equal(context.saveXpertsApplication(withResume).ok, true);
+  assert.equal(context.saveXpertsApplication(withResume).ok, true);
+  assert.equal(rows.length, 2);
+  assert.match(rows[1][17], /test-pdf/);
+  assert.equal(files.length, 1);
   assert.equal(context.saveXpertsApplication({ ...data, choices: [] }).invalid, true);
 });
 

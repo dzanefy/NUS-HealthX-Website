@@ -43,7 +43,7 @@ function validateApplication(data) {
   const sectors = ['MedTech', 'Digital health', 'Biotech and life sciences', 'Healthcare services', 'Clinical research', 'Health innovation'];
   if (!companies.includes(data.company) || !Array.isArray(data.sectors) || data.sectors.length > sectors.length || data.sectors.some(s => !sectors.includes(s))) throw new Error('Invalid choices');
   const resume = data.resume;
-  if (!resume || typeof resume.name !== 'string' || resume.name.length > 200 || !/\.(pdf|doc|docx)$/i.test(resume.name) || typeof resume.base64 !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(resume.base64) || resume.base64.length > 2796204) throw new Error('Invalid resume');
+  if (!resume || typeof resume.name !== 'string' || resume.name.length > 200 || !/\.(pdf)$/i.test(resume.name) || typeof resume.base64 !== 'string' || !/^[A-Za-z0-9+/]+={0,2}$/.test(resume.base64) || resume.base64.length > 2796204) throw new Error('Invalid resume');
   return data;
 }
 
@@ -66,16 +66,11 @@ function doPost(e) {
     if (sheet.getLastRow() > 1 && sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).createTextFinder(data.id).matchEntireCell(true).findNext()) return json({ ok: true, id: data.id });
     const bytes = Utilities.base64Decode(data.resume.base64);
     if (!bytes.length || bytes.length > 2 * 1024 * 1024) return json({ invalid: true });
-    const ext = data.resume.name.split('.').pop().toLowerCase();
-    const magic = bytes.slice(0, 4).map(b => b & 255).join(',');
-    if ((ext === 'pdf' && magic !== '37,80,68,70') ||
-        (ext === 'doc' && magic !== '208,207,17,224') ||
-        (ext === 'docx' && magic !== '80,75,3,4')) return json({ invalid: true });
-    const types = { pdf: 'application/pdf', doc: 'application/msword', docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' };
+    if (bytes.slice(0, 5).map(b => b & 255).join(',') !== '37,80,68,70,45') return json({ invalid: true });
     const folder = DriveApp.getFolderById(props.getProperty('RESUME_FOLDER_ID'));
-    const filename = data.id + '.' + ext;
+    const filename = data.id + '.pdf';
     const existing = folder.getFilesByName(filename);
-    const file = existing.hasNext() ? existing.next() : folder.createFile(Utilities.newBlob(bytes, types[ext], filename));
+    const file = existing.hasNext() ? existing.next() : folder.createFile(Utilities.newBlob(bytes, 'application/pdf', filename));
     // Prefix user values so Sheets cannot execute spreadsheet formulas.
     const literal = value => "'" + value;
     sheet.appendRow([data.id, new Date(), literal(data.name), literal(data.email), literal(data.school),

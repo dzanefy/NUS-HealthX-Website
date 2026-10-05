@@ -49,7 +49,7 @@ public application page.
 
 ## Behaviour and limits
 
-- Required name, email, major and résumé; PDF/DOC/DOCX, maximum 2 MiB.
+- Required name, email, major and résumé; PDF only, maximum 2 MiB.
 - Server validation, text-safe sheet values, a hidden spam field and a script lock.
 - One browser form attempt uses one application ID, including retries. A page
   reload starts a new ID. A lost response can leave a saved row; retry the same

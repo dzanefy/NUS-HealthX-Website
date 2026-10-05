@@ -25,14 +25,23 @@ export default function XpertsApply() {
     if (submitting.current) return;
     const form = new FormData(event.currentTarget);
     setError('');
-    let application;
-    try {
-      application = validateXperts({ ...Object.fromEntries(form), id: applicationId.current,
-        hasProject, choices: choices.map(({ id, reason }) => ({ id, reason })) }, mentorNames);
-    } catch (err) { setError(err instanceof Error ? err.message : 'Please check your application.'); return; }
     submitting.current = true;
     setBusy(true);
     try {
+      const file = form.get('resume');
+      let resume = null;
+      if (file instanceof File && file.size > 0) {
+        if (!/\.pdf$/i.test(file.name) || file.size > 2 * 1024 * 1024) throw new Error('Please upload a PDF résumé up to 2 MB.');
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(String(reader.result).split(',')[1]);
+          reader.onerror = () => reject(new Error('Could not read your résumé. Please select it again.'));
+          reader.readAsDataURL(file);
+        });
+        resume = { name: file.name, base64 };
+      }
+      const application = validateXperts({ ...Object.fromEntries(form), id: applicationId.current,
+        hasProject, resume, choices: choices.map(({ id, reason }) => ({ id, reason })) }, mentorNames);
       const response = await fetch('/api/xperts', { method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(application), signal: AbortSignal.timeout(35000) });
       const result = await response.json().catch(() => null);
@@ -103,6 +112,12 @@ export default function XpertsApply() {
           <div className="mt-5 flex flex-wrap items-center justify-between gap-3"><p className="text-sm text-slate-500" role="status">{choices.length} of 3 mentor choices</p>
             {choices.length < 3 && <button type="button" onClick={() => setChoices(current => [...current, { key: nextKey.current++, id: '', reason: '' }])} className="rounded-full border border-teal-700 px-5 py-2 text-sm font-bold text-teal-700 hover:bg-teal-50">+ Add another mentor</button>}
           </div>
+        </section>
+        <section className="initiative-card p-6 sm:p-8">
+          <label className="block text-sm font-bold text-navy-950">Résumé <span className="font-normal text-slate-500">(optional)</span>
+            <input name="resume" type="file" accept=".pdf,application/pdf" className="mt-3 block w-full rounded-xl border border-dashed border-navy-200 bg-slate-50 p-4 font-normal" />
+          </label>
+          <p className="mt-2 text-sm text-slate-500">PDF only, up to 2 MB. You can apply without a résumé. If uploaded, the HealthX team will use it for application review.</p>
         </section>
       </fieldset>
       <p className="text-sm leading-relaxed text-slate-500">The HealthX team will use your details to review your application and arrange mentorship. Mentor preferences are requests; matches depend on availability and fit.</p>

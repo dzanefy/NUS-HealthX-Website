@@ -16,13 +16,13 @@ export default async function submitXperts(req: IncomingMessage & { body?: unkno
       let size = 0;
       for await (const chunk of req) {
         size += Buffer.byteLength(chunk);
-        if (size > 64_000) return reply(413, { error: 'Your application is too long. Please shorten your answers.' });
+        if (size > 3_000_000) return reply(413, { error: 'Please use a PDF résumé up to 2 MB and keep your answers within the limits.' });
         chunks.push(Buffer.from(chunk));
       }
       body = Buffer.concat(chunks).toString('utf8');
     }
     if (typeof body === 'string') body = JSON.parse(body);
-    if (JSON.stringify(body)?.length > 64_000) return reply(413, { error: 'Your application is too long. Please shorten your answers.' });
+    if (JSON.stringify(body)?.length > 3_000_000) return reply(413, { error: 'Please use a PDF résumé up to 2 MB and keep your answers within the limits.' });
   } catch { return reply(400, { error: 'Invalid application.' }); }
   let application;
   try { application = validateXperts(body, mentorNames); }

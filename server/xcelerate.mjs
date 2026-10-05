@@ -54,7 +54,7 @@ export default async function submitApplication(req, res, env = process.env) {
     if (result.invalid === true)
       return reply(400, {
         error:
-          "Check the required fields and upload a PDF or Word résumé under 2 MB.",
+          "Check the required fields and upload a PDF résumé under 2 MB.",
       })
     throw new Error("Save was not confirmed")
   } catch {
