@@ -15,8 +15,8 @@ export default function XPerience() {
         eyebrow="Exclusive programme"
         title="Health X'perience"
         description="A year-long cohort for HealthX members who want to move from learning about healthcare innovation to working through real clinical challenges."
-        ctaLabel="Join the cohort"
-        ctaHref="#get-involved"
+        ctaLabel="Programme updates"
+        ctaHref="https://t.me/nushealthx"
       />
 
       <section id="content" className="px-6 py-24">
@@ -88,7 +88,7 @@ export default function XPerience() {
             <InitiativeSectionHeader eyebrow="AY25/26 kickoff" title="Programme sessions so far" />
           </FadeIn>
 
-          <div className="grid items-start gap-10 lg:grid-cols-[1fr_400px]">
+          <div className="max-w-4xl">
             <div className="space-y-5 leading-relaxed text-slate-600">
               <p>
                 The inaugural Health X&apos;perience programme kicked off with two foundational learning sessions on 12 and 13 November 2025. The programme featured an engaging session by Dr Ian Mathews, who introduced the Stanford Biodesign framework and guided participants through design thinking, needs validation, and the identification of unmet clinical needs through patient journey mapping and problem framing.
@@ -99,14 +99,6 @@ export default function XPerience() {
               <p>
                 Together, the sessions provided participants with both innovation and business foundations, while fostering active discussions among students and mentors committed to translating MedTech ideas into practical solutions.
               </p>
-            </div>
-            <div className="grid grid-cols-1 gap-4">
-              <div className="initiative-card overflow-hidden p-2">
-                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=450&fit=crop&auto=format" alt="Health X'perience session" className="aspect-[4/3] h-full w-full rounded-2xl object-cover" />
-              </div>
-              <div className="initiative-card overflow-hidden p-2">
-                <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=450&fit=crop&auto=format" alt="Health X'perience workshop" className="aspect-[4/3] h-full w-full rounded-2xl object-cover" />
-              </div>
             </div>
           </div>
         </div>

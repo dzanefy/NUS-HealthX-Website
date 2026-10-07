@@ -4,23 +4,6 @@ import { useEvents } from '../hooks/useEvents';
 import EventRegistration from '../components/EventRegistration';
 import FadeIn from '../components/FadeIn';
 
-/* Maps event slugs to a second editorial image (different crop/angle) */
-const editorialImages: Record<string, string> = {
-  'ai-healthcare-masterclass':
-    'https://images.unsplash.com/photo-1507146153580-69a1fe6d8aa1?w=900&h=550&fit=crop&auto=format',
-  'medtech-business-masterclass':
-    'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=900&h=550&fit=crop&auto=format',
-  'bci-workshop':
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&h=550&fit=crop&auto=format',
-  'nus-kcl-challenge':
-    'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&h=550&fit=crop&auto=format',
-  'design-for-medicine':
-    'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?w=900&h=550&fit=crop&auto=format',
-};
-
-const fallbackEditorial =
-  'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=900&h=550&fit=crop&auto=format';
-
 function ArticleImage({ src, title }: { src: string; title: string }) {
   const [failed, setFailed] = useState(false);
   if (failed) return <p className="my-10 text-sm text-slate-500" role="status">Event photo is currently unavailable.</p>;
@@ -54,9 +37,7 @@ export default function ArticleDetail() {
   }
 
   const related = xposureEvents.filter(e => e.slug !== slug).slice(0, 3);
-  const articleImages = event.slug.startsWith('event-')
-    ? event.articleImageUrls ?? []
-    : [editorialImages[event.slug] ?? fallbackEditorial];
+  const articleImages = event.articleImageUrls ?? [];
   const usePhotoPair = articleImages.length > 1 && event.body.length < 2;
   const introImage = articleImages.length > 1 && !usePhotoPair ? articleImages[0] : undefined;
   const inlineImage = articleImages.length > 1 ? articleImages[1] : articleImages[0];
@@ -72,7 +53,7 @@ export default function ArticleDetail() {
   return (
     <div className="bg-white">
 
-      {/* Compact event heading; thumbnail placeholders belong on listing cards. */}
+      {/* Compact event heading; event photos are shown only when supplied. */}
       <section className="grain-bg relative overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-6 pt-32 pb-12">
           <Link
@@ -308,13 +289,13 @@ export default function ArticleDetail() {
                 to={`/xposure/${e.slug}`}
                 className="group bg-white rounded-2xl border border-slate-100 hover:border-navy-200 hover:shadow-lg overflow-hidden transition-all"
               >
-                <div className="aspect-[16/9] overflow-hidden bg-navy-50">
+                {e.thumbnail && <div className="aspect-[16/9] overflow-hidden bg-navy-50">
                   <img
                     src={e.thumbnail}
                     alt={e.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                </div>
+                </div>}
                 <div className="p-5">
                   <p className="text-xs text-teal-600 font-bold uppercase tracking-widest mb-1">{e.shortDate}</p>
                   <h3 className="serif text-base font-bold text-navy-950 group-hover:text-teal-700 transition-colors leading-snug">

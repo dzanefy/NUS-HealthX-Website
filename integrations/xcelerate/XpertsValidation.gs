@@ -20,7 +20,10 @@ const XPERTS_MENTOR_NAMES = {
   "ee-ling-lim": "Ee Ling Lim",
   "ang-yee-gary": "Ang Yee Gary",
   "justin-fong-cheng-wah": "Justin Fong Cheng Wah",
-  "neelima-gupta": "Neelima Gupta"
+  "neelima-gupta": "Neelima Gupta",
+  "alexandria-remus": "Alexandria Remus",
+  "yiyuan-yang": "Yiyuan Yang",
+  "tan-wei-jie-clarence": "Tan Wei Jie Clarence"
 };
 // Shared validation for the website API and the generated Apps Script copy.
 function validateXperts(data, mentorNames) {

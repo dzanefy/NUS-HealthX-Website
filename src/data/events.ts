@@ -27,21 +27,6 @@ export interface XPosureEvent {
 
 export const xposureEvents: XPosureEvent[] = [
   {
-    id: 'next-xposure-placeholder',
-    slug: 'next-xposure-session',
-    title: "Health X'posure: Next Session",
-    shortDate: 'Coming soon',
-    dateISO: '2026-10-01',
-    location: 'NUS (details to be announced)',
-    speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&h=500&fit=crop&auto=format',
-    excerpt: 'We are preparing the next Health X\'posure session. Register your interest and we will share the details when the programme is confirmed.',
-    body: ['This is a placeholder for the next Health X\'posure event. More details, including the date, speakers, and registration information, will be added soon.'],
-    tags: ['Coming soon', 'Health X\'posure'],
-    registerUrl: '#register-interest',
-    upcoming: true,
-  },
-  {
     id: '1',
     slug: 'ai-healthcare-masterclass',
     title: 'AI in Healthcare Masterclass',
@@ -60,7 +45,7 @@ export const xposureEvents: XPosureEvent[] = [
         affiliation: 'MOH Office of Healthcare Innovation',
       },
     ],
-    thumbnail: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       'An immersive masterclass exploring how artificial intelligence is transforming clinical workflows, diagnostics, and medical decision-making in real-world healthcare settings.',
     body: [
@@ -97,7 +82,7 @@ export const xposureEvents: XPosureEvent[] = [
         affiliation: 'Bot MD',
       },
     ],
-    thumbnail: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       'An engaging deep-dive into how MedTech innovations are brought from concept to market, featuring three seasoned clinician-entrepreneurs sharing candid lessons from the startup trenches.',
     body: [
@@ -124,7 +109,7 @@ export const xposureEvents: XPosureEvent[] = [
         affiliation: 'g.tec Medical Engineering',
       },
     ],
-    thumbnail: 'https://images.unsplash.com/photo-1559757175262-86d8bf4b05e6?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       "HealthX AY25/26 kicked off with an inspiring workshop on Brain-Computer Interfaces, exploring how neuroscience and technology converge to revolutionise healthcare and human-computer interaction.",
     body: [
@@ -145,7 +130,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2025-02-26',
     location: "King's College London & NUS (Hybrid)",
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       "A cross-institutional hackathon between NUS and King's College London, with interdisciplinary teams tackling real clinical challenges across two world-class universities.",
     body: [
@@ -165,7 +150,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2025-02-07',
     location: 'NUS Yong Siew Toh Conservatory, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       'A deep dive into the frontier of regenerative medicine, including stem cell therapies, tissue engineering, and the clinical translation of biological innovations.',
     body: [
@@ -185,7 +170,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2025-01-25',
     location: 'NUS University Town, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       "A festive networking evening connecting students, clinicians, and industry leaders through lightning talks, structured conversations, and the warmth of the HealthX community.",
     body: [
@@ -205,7 +190,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2024-11-17',
     location: 'NUS School of Design & Environment, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       'An eight-month immersive programme pairing interdisciplinary teams with clinical mentors to develop user-centred solutions to real unmet healthcare needs.',
     body: [
@@ -225,7 +210,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2024-11-15',
     location: 'NUS Yong Siew Toh Conservatory, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       "The inaugural Innovation Sharing session of AY24/25 set the intellectual foundation for a year of interdisciplinary exploration across the MedTech landscape.",
     body: [
@@ -245,7 +230,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2024-09-19',
     location: 'NUS Faculty of Engineering, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1581093804475-577d72e38aa0?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       'A hands-on introduction to medical 3D printing, from biocompatible materials to patient-specific device fabrication, anatomical models, and surgical planning applications.',
     body: [
@@ -265,7 +250,7 @@ export const xposureEvents: XPosureEvent[] = [
     dateISO: '2024-10-07',
     location: 'National University Hospital, Singapore',
     speakers: [],
-    thumbnail: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800&h=500&fit=crop&auto=format',
+    thumbnail: '',
     excerpt:
       "An exclusive behind-the-scenes look at NUHS's innovation ecosystem, with live demonstrations of cutting-edge clinical technologies and engineers and clinicians on hand to share their journeys.",
     body: [

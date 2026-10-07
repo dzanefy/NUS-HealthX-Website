@@ -32,10 +32,10 @@ export function useEvents() {
           shortDate: [row.event_date ? new Date(`${row.event_date}T12:00:00`).toLocaleDateString('en-SG', { day: 'numeric', month: 'long', year: 'numeric' }) : 'Date to be confirmed', row.event_time].filter(Boolean).join(' · '),
           dateISO: row.event_date ?? '',
           location: row.location || 'Location to be confirmed',
-          thumbnail: safeUrl(row.image_url) ?? eventMedia[row.sheet_event_id]?.cover ?? '/event-placeholder.svg',
+          thumbnail: eventPhotoUrl(row.image_url) ?? eventMedia[row.sheet_event_id]?.cover ?? '',
           articleImageUrls: row.article_image_url?.trim()
             ? row.article_image_url.split(/\r?\n/)
-              .map((value: string) => safeUrl(value.trim()))
+              .map((value: string) => eventPhotoUrl(value.trim()))
               .filter((value: string | undefined): value is string => Boolean(value)).slice(0, 2)
             : eventMedia[row.sheet_event_id]?.article ?? [],
           excerpt: row.summary || '',
@@ -71,4 +71,13 @@ function safeUrl(value: string | null): string | undefined {
     const url = new URL(value);
     return ['https:', 'http:'].includes(url.protocol) ? url.href : undefined;
   } catch { return; }
+}
+
+// Stock and scaffold images must not be presented as photographs of our events.
+function eventPhotoUrl(value: string | null): string | undefined {
+  const url = safeUrl(value);
+  if (!url) return;
+  const parsed = new URL(url);
+  if (['images.unsplash.com', 'source.unsplash.com', 'picsum.photos'].includes(parsed.hostname) || parsed.pathname.endsWith('/event-placeholder.svg')) return;
+  return url;
 }

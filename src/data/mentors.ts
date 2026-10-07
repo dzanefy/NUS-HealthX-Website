@@ -7,6 +7,7 @@ export interface Mentor {
   bio: string;
   photo: string;
   linkedIn?: string;
+  profileUrl?: string;
 }
 
 // Public professional fields only; no private signup or matching responses.
@@ -318,5 +319,34 @@ export const mentors: Mentor[] = [
     "bio": "I am a biomedical educator and interdisciplinary researcher at the NUS, with a background in pharmacology, neuroscience, molecular biology, and biomedical education. My work focuses on pharmacology education, pharmacogenomics and personalised medicine, AI-enhanced learning, and human-centred healthcare innovation. I teach across undergraduate, postgraduate, medical, and continuing education programmes and contribute to curriculum development within the Department of Pharmacology. My research explores how emerging technologies, evidence-based education, and digital tools can improve learning, healthcare communication, and decision-making. I am also developing work in traditional, complementary, and integrative healthcare, with a particular interest in translating scientific evidence into practical resources for healthcare professionals and the public.",
     "photo": "",
     "linkedIn": "https://www.linkedin.com/in/neelima-gupta-phd/"
+  },
+  {
+    "id": "alexandria-remus",
+    "name": "Alexandria Remus",
+    "title": "Senior Research Fellow",
+    "affiliation": "NUS · Heat Resilience and Performance Centre",
+    "expertise": ["MedTech", "Biotechnology", "Healthcare innovation", "Research", "Digital health / AI health", "Engineering"],
+    "bio": "Dr Alexandria Remus is a Senior Research Fellow at the Heat Resilience and Performance Centre at NUS. Her work draws on biomechanics, wearable technologies and novel approaches to understanding human performance. She offers research guidance, project feedback, clinical perspectives and academic pathway guidance.",
+    "photo": "",
+    "linkedIn": "https://www.linkedin.com/in/alexandria-remus-phd-36899837/"
+  },
+  {
+    "id": "yiyuan-yang",
+    "name": "Yiyuan Yang",
+    "title": "Assistant Professor",
+    "affiliation": "NUS · N.1 Institute for Health",
+    "expertise": ["MedTech", "Biotechnology", "Healthcare innovation", "Digital health / AI health", "Engineering"],
+    "bio": "Dr Yiyuan Yang is an Assistant Professor at NUS. His research develops biological models and biomedical devices, including approaches that combine machine learning with biomedical platforms for diagnosis and therapy. His expertise includes bioelectronics, neurotechnology and organoid systems, and he offers research guidance.",
+    "photo": "",
+    "profileUrl": "https://research.nus.edu.sg/harlonyang-lab/"
+  },
+  {
+    "id": "tan-wei-jie-clarence",
+    "name": "Tan Wei Jie Clarence",
+    "title": "Section Head, Planning",
+    "affiliation": "National University Hospital",
+    "expertise": ["Healthcare innovation", "Public health", "Digital health / AI health", "Product development", "Consulting / strategy"],
+    "bio": "Clarence Tan is Section Head, Planning at National University Hospital. His interests include healthcare transformation, care model redesign, digital health, product development and strategy. He offers career guidance, startup and entrepreneurship advice, and project feedback.",
+    "photo": ""
   }
 ];

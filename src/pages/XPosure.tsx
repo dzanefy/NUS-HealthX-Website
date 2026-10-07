@@ -7,18 +7,21 @@ import FadeIn from '../components/FadeIn';
 import { InitiativeCta, InitiativeHero, InitiativeSectionHeader } from './InitiativePage';
 
 function EventCard({ event, delay = 0 }: { event: XPosureEvent; delay?: number }) {
+  const [photoFailed, setPhotoFailed] = useState(false);
+  const showPhoto = Boolean(event.thumbnail) && !photoFailed;
   return (
     <FadeIn delay={delay}>
       <article className="initiative-card group flex h-full flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-950/8">
-        <div className="relative aspect-[16/9] overflow-hidden bg-navy-50">
-          <img src={event.thumbnail} alt={event.title} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        {showPhoto && <div className="relative aspect-[16/9] overflow-hidden bg-navy-50">
+          <img src={event.thumbnail} alt={event.title} loading="lazy" onError={() => setPhotoFailed(true)} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
           <div className="absolute inset-0 bg-gradient-to-t from-navy-950/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
           {event.upcoming && (
             <span className="absolute left-3 top-3 rounded-full bg-teal-500 px-2.5 py-1 text-xs font-bold text-white">Upcoming</span>
           )}
-        </div>
+        </div>}
 
         <div className="flex flex-1 flex-col p-6">
+          {event.upcoming && !showPhoto && <span className="mb-3 self-start rounded-full bg-teal-600 px-3 py-1 text-xs font-bold text-white">Upcoming</span>}
           <p className="mb-3 text-xs font-bold text-navy-600">{event.category || 'Other'}{event.subPillar ? ` · ${event.subPillar}` : ''}</p>
           <p className="mb-2.5 flex items-center gap-1.5 text-xs font-medium text-slate-400">
             <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -79,7 +82,7 @@ export default function XPosure() {
       />
 
       <section id="content" className="px-6 py-24">
-        <div className="mx-auto grid max-w-6xl items-center gap-12 md:grid-cols-2 lg:gap-20">
+        <div className="mx-auto max-w-4xl">
           <FadeIn>
             <InitiativeSectionHeader eyebrow="About the programme" title="Meet the work behind healthcare innovation" />
             <div className="space-y-4 leading-relaxed text-slate-600">
@@ -89,15 +92,6 @@ export default function XPosure() {
               <p>
                 Talks, workshops, and networking sessions are designed for people at different stages. Come to build context, find collaborators, or work out which part of healthcare innovation you want to explore next.
               </p>
-            </div>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="relative overflow-hidden rounded-3xl border border-navy-100 bg-navy-50 shadow-sm">
-              <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&h=600&fit=crop&auto=format" alt="Students attending a Health X'posure event" className="aspect-[4/3] h-full w-full object-cover" />
-              <div className="absolute bottom-4 left-4 rounded-2xl bg-navy-950/90 px-5 py-4 text-white backdrop-blur-sm">
-                <p className="serif text-3xl font-bold">Learn together</p>
-                <p className="mt-0.5 text-xs text-navy-200">Conversations, masterclasses and fellowships</p>
-              </div>
             </div>
           </FadeIn>
         </div>
