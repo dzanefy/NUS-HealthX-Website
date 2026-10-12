@@ -5,7 +5,7 @@ import FadeIn from '../components/FadeIn';
 
 function MentorPhoto({ mentor, compact = false }: { mentor: Mentor; compact?: boolean }) {
   const [failed, setFailed] = useState(false);
-  if (mentor.photo && !failed) return <img src={mentor.photo} alt={mentor.name} onError={() => setFailed(true)} className="h-full w-full object-cover object-top" />;
+  if (mentor.photo && !failed) return <img src={mentor.photo} alt={mentor.name} onError={() => setFailed(true)} className={`h-full w-full object-cover ${mentor.id === 'joel-tay' ? 'object-[60%_top]' : 'object-top'}`} />;
   const initials = mentor.name.replace(/^(Dr\.?|Prof\.?)\s+/i, '').split(/\s+/).map(word => word[0]).slice(0, 2).join('');
   return <div aria-label={`${mentor.name}`} className={`flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-navy-50 to-navy-200 text-navy-950 ${compact ? 'text-base' : 'min-h-64 pb-12 text-6xl'}`}>
     <span aria-hidden="true" className="font-semibold">{initials}</span>
@@ -111,7 +111,7 @@ export default function Mentors() {
             <div className="bg-white rounded-3xl border border-slate-100 shadow-2xl shadow-navy-950/8 overflow-hidden">
               <div className="grid md:grid-cols-[320px_1fr]">
                 {/* Photo */}
-                <div className="relative aspect-[3/4] md:aspect-auto overflow-hidden bg-navy-100">
+                <div className={`relative aspect-[3/4] overflow-hidden bg-navy-100 ${selected.id === 'joel-tay' ? 'self-start' : 'md:aspect-auto'}`}>
                   <MentorPhoto key={selected.id} mentor={selected} />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
