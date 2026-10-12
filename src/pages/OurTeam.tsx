@@ -53,44 +53,45 @@ type TeamPerson = {
   initials: string;
   photoUrl?: string;
   email?: string;
+  linkedIn?: string;
 };
 
 const teams: { id: string; name: string; members: TeamPerson[] }[] = [
   { id: 'presidents', name: 'Presidents', members: [
-    { name: 'Lucien Leong Guang Shian', role: 'President', study: 'Year 4, Medicine', initials: 'LL' },
-    { name: 'Ng Chen Meng', role: 'Vice President', study: 'Year 2, Business AI Systems', initials: 'NC' },
+    { name: 'Lucien Leong Guang Shian', linkedIn: 'https://www.linkedin.com/in/lucien-leong/', role: 'President', study: 'Year 4, Medicine', initials: 'LL' },
+    { name: 'Ng Chen Meng', linkedIn: 'https://www.linkedin.com/in/ng-chen-meng-100abc/', role: 'Vice President', study: 'Year 2, Business AI Systems', initials: 'NC' },
   ] },
   { id: 'partnerships', name: 'Partnerships', members: [
-    { name: 'Eugene Chua', role: 'Director, Partnerships (External)', study: 'Year 3, Life Sciences', initials: 'EC' },
-    { name: 'Claire Hartawan', role: 'Director, Partnerships (Internal)', study: 'Year 4, Biomedical Engineering', initials: 'CH' },
-    { name: 'Elkan Chua', role: 'Associate, Partnerships (External)', study: 'Year 2, Business AI Systems', initials: 'EC' },
-    { name: 'Ning Wanqing', role: 'Associate, Partnerships', study: 'Year 1, Medicine', initials: 'NW' },
+    { name: 'Eugene Chua', linkedIn: 'https://www.linkedin.com/in/eugene-chua-a83920161/', role: 'Director, Partnerships (External)', study: 'Year 3, Life Sciences', initials: 'EC' },
+    { name: 'Claire Hartawan', linkedIn: 'https://www.linkedin.com/in/claire-madeline-89701330b/', role: 'Director, Partnerships (Internal)', study: 'Year 4, Biomedical Engineering', initials: 'CH' },
+    { name: 'Elkan Chua', linkedIn: 'https://www.linkedin.com/in/elkan-chua/', role: 'Associate, Partnerships (External)', study: 'Year 2, Business AI Systems', initials: 'EC' },
+    { name: 'Ning Wanqing', linkedIn: 'https://www.linkedin.com/in/wanqingning/', role: 'Associate, Partnerships', study: 'Year 1, Medicine', initials: 'NW' },
   ] },
   { id: 'marketing', name: 'Marketing', members: [
-    { name: 'Ellen Indraputri', role: 'Director, Marketing', study: 'Year 3, Life Sciences', initials: 'EI' },
-    { name: 'Vedika Binani', role: 'Associate, Marketing', study: 'Year 1, Life Sciences', initials: 'VB' },
+    { name: 'Ellen Indraputri', linkedIn: 'https://www.linkedin.com/in/ellen-indraputri-389089321/', role: 'Director, Marketing', study: 'Year 3, Life Sciences', initials: 'EI' },
+    { name: 'Vedika Binani', linkedIn: 'https://www.linkedin.com/in/vedika-binani-989280309/', role: 'Associate, Marketing', study: 'Year 1, Life Sciences', initials: 'VB' },
   ] },
   { id: 'finance-operations', name: 'Finance & Operations', members: [
-    { name: 'Hemil Batavia', role: 'Director, Finance & Operations', study: 'Year 3, Finance', initials: 'HB' },
-    { name: 'Esha Kejriwal', role: 'Associate, Finance & Operations', study: 'Year 4, Finance', initials: 'EK' },
+    { name: 'Hemil Batavia', linkedIn: 'https://www.linkedin.com/in/hemil-batavia-239206311/', role: 'Director, Finance & Operations', study: 'Year 3, Finance', initials: 'HB' },
+    { name: 'Esha Kejriwal', linkedIn: 'https://www.linkedin.com/in/esha-kejriwal/', role: 'Associate, Finance & Operations', study: 'Year 4, Finance', initials: 'EK' },
   ] },
   { id: 'technology', name: 'Technology', members: [
-    { name: 'Jessica Chen', role: 'Director, Technology', study: 'Year 2, Computer Science', initials: 'JC' },
-    { name: 'Danial-Zanefy', role: 'Associate, Technology', study: 'Year 2, Business AI Systems', initials: 'DZ' },
-    { name: 'Darren Chung', role: 'Associate, Technology', study: 'Year 3, Computer Science', initials: 'DC' },
+    { name: 'Jessica Chen', linkedIn: 'https://www.linkedin.com/in/jessica-chen-jc/', role: 'Director, Technology', study: 'Year 2, Computer Science', initials: 'JC' },
+    { name: 'Danial-Zanefy', linkedIn: 'https://www.linkedin.com/in/danial-zanefy/', role: 'Associate, Technology', study: 'Year 2, Business AI Systems', initials: 'DZ' },
+    { name: 'Darren Chung', linkedIn: 'https://www.linkedin.com/in/chungdarren/', role: 'Associate, Technology', study: 'Year 3, Computer Science', initials: 'DC' },
   ] },
   { id: 'xposure', name: "Health X'posure", members: [
-    { name: 'Jon Yew', role: "Director, Health X'posure", study: 'Year 2, Medicine', initials: 'JY' },
-    { name: 'Hibiki Nishiwaki', role: "Associate, Health X'posure", study: 'Year 3, Computer Science', initials: 'HN' },
-    { name: 'Kavya Frances Thiagarajan', role: "Associate, Health X'posure", study: 'Year 3, Public Health', initials: 'KT' },
+    { name: 'Jon Yew', linkedIn: 'https://www.linkedin.com/in/jon-yew-ho/', role: "Director, Health X'posure", study: 'Year 2, Medicine', initials: 'JY' },
+    { name: 'Hibiki Nishiwaki', linkedIn: 'https://www.linkedin.com/in/hbknishi/', role: "Associate, Health X'posure", study: 'Year 3, Computer Science', initials: 'HN' },
+    { name: 'Kavya Frances Thiagarajan', linkedIn: 'https://www.linkedin.com/in/kavya-thiagarajan-11a212266/', role: "Associate, Health X'posure", study: 'Year 3, Public Health', initials: 'KT' },
   ] },
   { id: 'xperience', name: "Health X'perience", members: [
-    { name: 'Fatimah Rehman', role: "Director, Health X'perience", study: 'Year 4, Biomedical Engineering', initials: 'FR' },
-    { name: 'Filip Tudose', role: "Associate, Health X'perience", study: 'Year 3, Biomedical Engineering', initials: 'FT' },
-    { name: 'Mohamad Naufal Hakeem', role: "Associate, Health X'perience", study: 'Year 1, Business Administration', initials: 'NH' },
+    { name: 'Fatimah Rehman', linkedIn: 'https://www.linkedin.com/in/fatimah-rehman1/', role: "Director, Health X'perience", study: 'Year 4, Biomedical Engineering', initials: 'FR' },
+    { name: 'Filip Tudose', linkedIn: 'https://www.linkedin.com/in/filip-tudose-50bb37242/', role: "Associate, Health X'perience", study: 'Year 3, Biomedical Engineering', initials: 'FT' },
+    { name: 'Mohamad Naufal Hakeem', linkedIn: 'https://www.linkedin.com/in/mohamad-naufal-hakeem-945080221/', role: "Associate, Health X'perience", study: 'Year 1, Business Administration', initials: 'NH' },
   ] },
   { id: 'xccelerate', name: "Health X'ccelerate", members: [
-    { name: 'Wesley Ong', role: "Associate, Health X'ccelerate", study: 'Year 2, Biomedical Engineering', initials: 'WO' },
+    { name: 'Wesley Ong', linkedIn: 'https://www.linkedin.com/in/wesley-ong-8ba27b386/', role: "Associate, Health X'ccelerate", study: 'Year 2, Biomedical Engineering', initials: 'WO' },
   ] },
 ];
 
@@ -104,10 +105,6 @@ const advisors: TeamPerson[] = [
     email: 'dineshkumar@nus.edu.sg',
   },
 ];
-
-function linkedInSearch(name: string) {
-  return `https://www.linkedin.com/search/results/people/?keywords=${encodeURIComponent(name)}`;
-}
 
 function LinkedInIcon() {
   return (
@@ -137,16 +134,16 @@ function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
           <p className="mt-2 text-sm leading-relaxed text-slate-400">{person.study}</p>
           {person.email ? (
             <a href={`mailto:${person.email}`} className="mt-4 inline-flex text-sm font-semibold text-navy-700 transition-colors hover:text-teal-600">{person.email}</a>
-          ) : <a
-            href={linkedInSearch(person.name)}
+          ) : person.linkedIn ? <a
+            href={person.linkedIn}
             target="_blank"
             rel="noreferrer"
-            aria-label={`Find ${person.name} on LinkedIn`}
+            aria-label={`View ${person.name} on LinkedIn`}
             className="mt-4 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-navy-700 transition-colors hover:text-teal-600"
           >
             <LinkedInIcon />
             LinkedIn
-          </a>}
+          </a> : null}
         </div>
       </article>
     </FadeIn>
