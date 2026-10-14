@@ -4,10 +4,10 @@ import { xposureEvents, type XPosureEvent } from '../data/events';
 import eventMedia from '../data/eventMedia';
 
 // Local content remains available in environments without a database connection.
-export function useEvents() {
-  const [events, setEvents] = useState<XPosureEvent[]>(supabase ? [] : xposureEvents);
+export function useEvents({ sheetOnly = false }: { sheetOnly?: boolean } = {}) {
+  const [events, setEvents] = useState<XPosureEvent[]>(supabase || sheetOnly ? [] : xposureEvents);
   const [loading, setLoading] = useState(Boolean(supabase));
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(sheetOnly && !supabase);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
@@ -17,10 +17,12 @@ export function useEvents() {
     setError(false);
     async function load() {
       try {
-        const { data, error: queryError } = await supabase!
+        let query = supabase!
           .from('events')
           .select('id,sheet_event_id,title,summary,description,speakers,acknowledgements,event_date,event_time,location,image_url,article_image_url,registration_url,is_upcoming,category,sub_pillar,audience')
-          .eq('status', 'Published')
+          .eq('status', 'Published');
+        if (sheetOnly) query = query.not('sheet_event_id', 'is', null);
+        const { data, error: queryError } = await query
           .order('event_date', { ascending: false, nullsFirst: false })
           .abortSignal(controller.signal);
         if (controller.signal.aborted) return;
@@ -60,7 +62,7 @@ export function useEvents() {
     }
     void load();
     return () => controller.abort();
-  }, [attempt]);
+  }, [attempt, sheetOnly]);
 
   return { events, loading, error, retry: () => setAttempt(value => value + 1) };
 }

@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import FadeIn from '../components/FadeIn';
+import { useEvents } from '../hooks/useEvents';
+import type { XPosureEvent } from '../data/events';
+import { communityPhotos, communityGallery } from '../data/communityPhotos';
 
 /* ── Scramble hero word ──────────────────────────────── */
 const SCRAMBLE_WORDS = ['Medicine', 'Engineering', 'Business', 'Computing', 'Design', 'Science', 'Law'];
@@ -107,27 +110,12 @@ function DisciplinesTicker() {
 }
 
 /* ── Data ─────────────────────────────────────────── */
-const eventCards = [
-  { title: 'MedTech Business Masterclass', date: '27 Oct 2025', img: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=900&h=700&fit=crop&auto=format', to: '/xposure/medtech-business-masterclass' },
-  { title: 'Brain-Computer Interfacing Workshop', date: '15 Sep 2025', img: 'https://images.unsplash.com/photo-1737505599159-5ffc1dcbc08f?w=900&h=700&fit=crop&auto=format', to: '/xposure/bci-workshop' },
-  { title: "Health X'perience Kickoff", date: '12 Nov 2025', img: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=900&h=700&fit=crop&auto=format', to: '/xperience' },
-  { title: 'NUS-KCL Innovation Challenge', date: '26 Feb 2025', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=900&h=700&fit=crop&auto=format', to: '/xposure/nus-kcl-challenge' },
-];
-
-/* Team and community photos. Replace with real HealthX photos when available. */
-const communityPhotos = [
-  { src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=700&fit=crop&auto=format', caption: 'X\'perience Kickoff' },
-  { src: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=400&fit=crop&auto=format', caption: 'Networking Night' },
-  { src: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=600&h=400&fit=crop&auto=format', caption: 'NUS-KCL Challenge' },
-  { src: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=700&fit=crop&auto=format', caption: 'MedTech Masterclass' },
-];
-
 const initiatives = [
-  { number: '01', tag: 'Open programme', title: "X'posure", desc: 'Talks, workshops, and conversations that make healthcare innovation easier to enter.', to: '/xposure', img: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=800&h=600&fit=crop&auto=format' },
-  { number: '02', tag: 'Member cohort', title: "X'perience", desc: 'A year-long path from clinical observation to tested ideas and practical capability.', to: '/xperience', img: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800&h=600&fit=crop&auto=format' },
-  { number: '03', tag: 'Project placements', title: "X'ccelerate", desc: 'Work inside a real lab, startup, or hospital project with milestones and mentor support.', to: '/xcelerate', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&h=600&fit=crop&auto=format' },
-  { number: '04', tag: 'Mentorship network', title: "X'perts", desc: 'Find useful guidance from people building, treating, researching, and investing in healthcare.', to: '/xperts', img: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=800&h=600&fit=crop&auto=format' },
-  { number: '05', tag: 'Global exchange', title: "X'change", desc: 'See healthcare problems from another system, another market, and another set of constraints.', to: '/xchange', img: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=600&fit=crop&auto=format' },
+  { number: '01', tag: 'Open programme', title: "X'posure", desc: 'Talks, workshops, and conversations that make healthcare innovation easier to enter.', to: '/xposure', img: communityPhotos[2].src },
+  { number: '02', tag: 'Member cohort', title: "X'perience", desc: 'A year-long path from clinical observation to tested ideas and practical capability.', to: '/xperience', img: communityGallery[1].src },
+  { number: '03', tag: 'Project placements', title: "X'ccelerate", desc: 'Work inside a real lab, startup, or hospital project with milestones and mentor support.', to: '/xcelerate', img: communityPhotos[0].src },
+  { number: '04', tag: 'Mentorship network', title: "X'perts", desc: 'Find useful guidance from people building, treating, researching, and investing in healthcare.', to: '/xperts', img: communityGallery[0].src },
+  { number: '05', tag: 'Global exchange', title: "X'change", desc: 'See healthcare problems from another system, another market, and another set of constraints.', to: '/xchange', img: communityPhotos[1].src },
 ];
 
 const stats = [
@@ -143,8 +131,27 @@ const pillars = [
   { title: 'Make an Impact', desc: 'Build real solutions to real clinical problems through hands-on innovation projects.' },
 ];
 
+function HomeEventCard({ event }: { event: XPosureEvent }) {
+  const [photoFailed, setPhotoFailed] = useState(false);
+  return (
+    <Link to={`/xposure/${event.slug}`} className="group relative block min-h-[320px] overflow-hidden rounded-2xl bg-navy-950 sm:min-h-[380px]">
+      {event.thumbnail && !photoFailed && <img src={event.thumbnail} alt={event.title} loading="lazy" onError={() => setPhotoFailed(true)} className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#020d1e] via-[#020d1e]/40 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-6">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-teal-400">{event.category}{event.upcoming ? ' · Upcoming' : ''}</p>
+        <p className="mb-2 text-sm text-white/80">{event.shortDate}</p>
+        <h3 className="serif text-2xl font-bold text-white">{event.title}</h3>
+        <span className="mt-4 inline-block text-sm font-semibold text-white">Read more →</span>
+      </div>
+    </Link>
+  );
+}
+
 /* ── Page ─────────────────────────────────────────── */
 export default function Home() {
+  const { events, loading, error, retry } = useEvents({ sheetOnly: true });
+  const eventCards = events.slice(0, 4);
+
   return (
     <div className="bg-white">
 
@@ -194,15 +201,15 @@ export default function Home() {
           {/* Right: 2×2 photo mosaic */}
           <FadeIn delay={150} className="grid grid-cols-2 gap-3">
             {/* Tall left photo */}
-            <div className="row-span-2 rounded-2xl overflow-hidden bg-navy-50" style={{ minHeight: '340px' }}>
-              <img src={communityPhotos[0].src} alt={communityPhotos[0].caption} className="w-full h-full object-cover" />
+            <div className="relative row-span-2 rounded-2xl overflow-hidden bg-navy-50" style={{ minHeight: '340px' }}>
+              <img src={communityPhotos[0].src} alt={communityPhotos[0].caption} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: communityPhotos[0].position }} />
             </div>
             {/* Two stacked right photos */}
-            <div className="rounded-2xl overflow-hidden bg-navy-50 aspect-[4/3]">
-              <img src={communityPhotos[1].src} alt={communityPhotos[1].caption} className="w-full h-full object-cover" />
+            <div className="relative rounded-2xl overflow-hidden bg-navy-50 aspect-[4/3]">
+              <img src={communityPhotos[1].src} alt={communityPhotos[1].caption} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: communityPhotos[1].position }} />
             </div>
-            <div className="rounded-2xl overflow-hidden bg-navy-50 aspect-[4/3]">
-              <img src={communityPhotos[2].src} alt={communityPhotos[2].caption} className="w-full h-full object-cover" />
+            <div className="relative rounded-2xl overflow-hidden bg-navy-50 aspect-[4/3]">
+              <img src={communityPhotos[2].src} alt={communityPhotos[2].caption} loading="lazy" className="absolute inset-0 w-full h-full object-cover" style={{ objectPosition: communityPhotos[2].position }} />
             </div>
           </FadeIn>
         </div>
@@ -257,20 +264,16 @@ export default function Home() {
               </Link>
             </div>
           </FadeIn>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {eventCards.map(({ title, date, img, to }, i) => (
-              <FadeIn key={title} delay={i * 80} className={i === 0 ? 'sm:row-span-2' : ''}>
-                <Link to={to} className="group relative overflow-hidden rounded-2xl block h-full" style={{ minHeight: i === 0 ? '480px' : '220px' }}>
-                  <img src={img} alt={title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#020d1e] via-[#020d1e]/40 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <p className="text-teal-400 text-xs font-bold tracking-widest uppercase mb-1">{date}</p>
-                    <h3 className="serif text-xl font-bold text-white">{title}</h3>
-                  </div>
-                </Link>
+          {loading && <p role="status" className="text-slate-500">Loading events…</p>}
+          {error && <p role="alert" className="text-slate-600">We couldn’t load events. <button onClick={retry} className="underline">Try again</button></p>}
+          {!loading && !error && eventCards.length === 0 && <p className="text-slate-500">No events published yet. Check back soon.</p>}
+          {!loading && !error && <div className={`grid grid-cols-1 gap-4 ${eventCards.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+            {eventCards.map((event, i) => (
+              <FadeIn key={event.id} delay={i * 80}>
+                <HomeEventCard event={event} />
               </FadeIn>
             ))}
-          </div>
+          </div>}
         </div>
       </section>
 
@@ -287,15 +290,10 @@ export default function Home() {
             </div>
           </FadeIn>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[
-              { src: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&h=600&fit=crop&auto=format', label: 'MedTech Masterclass' },
-              { src: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=600&h=600&fit=crop&auto=format', label: 'X\'Posure Talk' },
-              { src: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=600&fit=crop&auto=format', label: 'Team HealthX' },
-              { src: 'https://images.unsplash.com/photo-1737505599159-5ffc1dcbc08f?w=600&h=600&fit=crop&auto=format', label: 'BCI Workshop' },
-            ].map(({ src, label }, i) => (
+            {communityGallery.map(({ src, label }, i) => (
               <FadeIn key={label} delay={i * 70}>
                 <div className="group relative rounded-2xl overflow-hidden aspect-square bg-navy-50">
-                  <img src={src} alt={label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  <img src={src} alt={label} loading="lazy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-950/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
                     <span className="text-white text-xs font-semibold">{label}</span>
                   </div>
