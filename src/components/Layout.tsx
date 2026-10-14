@@ -189,6 +189,18 @@ export default function Layout() {
                 A student-led healthcare innovation initiative at the National University of Singapore, bringing future leaders together to solve real clinical challenges.
               </p>
               <div className="flex gap-3 mt-6">
+                <a href="https://www.linkedin.com/company/nus-healthx/home/" target="_blank" rel="noopener noreferrer" aria-label="NUS HealthX on LinkedIn (opens in a new tab)" className="w-9 h-9 rounded-full bg-white/8 hover:bg-white/15 text-slate-400 hover:text-white transition-colors flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.762 2.239 5 5 5h14c2.762 0 5-2.238 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                  </svg>
+                </a>
+                <a href="https://www.instagram.com/nushealthx/" target="_blank" rel="noopener noreferrer" aria-label="NUS HealthX on Instagram (opens in a new tab)" className="w-9 h-9 rounded-full bg-white/8 hover:bg-white/15 text-slate-400 hover:text-white transition-colors flex items-center justify-center focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                    <circle cx="12" cy="12" r="4" />
+                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                  </svg>
+                </a>
                 <a href="https://t.me/nushealthx" aria-label="Telegram" className="w-9 h-9 rounded-full bg-white/8 hover:bg-white/15 text-slate-400 hover:text-white transition-colors flex items-center justify-center">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.833.941z"/>
