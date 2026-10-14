@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import FadeIn from '../components/FadeIn';
-import advisorPortrait from '../assets/team/dinesh-kumar-srinivasan.png';
+import advisorPortrait from '../assets/team/dinesh-kumar-srinivasan.webp';
+import teamPhotos from '../data/teamPhotos';
 
-const photoBaseUrl = 'https://xtwnqhnieobozjctwifp.supabase.co/storage/v1/object/public/team-photos/';
-const teamPhotoUrl = `${photoBaseUrl}healthx-team-2026-2027.png`;
+const teamPhoto = teamPhotos['healthx-team-2026-2027.png'];
 const portraitFiles: Record<string, string> = {
   'Lucien Leong Guang Shian': 'lucien-leong-guang-shian.jpg',
   'Ng Chen Meng': 'ng-chen-meng.png',
@@ -29,18 +29,12 @@ const portraitFiles: Record<string, string> = {
 
 function TeamPhoto() {
   const [failed, setFailed] = useState(false);
+  if (failed) return null;
   return (
     <figure className="overflow-hidden rounded-3xl border border-navy-100 bg-navy-50">
-      {teamPhotoUrl && !failed ? (
-        <div className="overflow-hidden">
-          <img src={teamPhotoUrl} alt="NUS HealthX team, academic year 2026–2027" loading="lazy" onError={() => setFailed(true)} className="block h-auto w-full origin-[40%_75%] scale-150" />
-        </div>
-      ) : (
-        <div className="flex aspect-[16/9] min-h-52 flex-col items-center justify-center gap-3 bg-gradient-to-br from-navy-50 to-navy-100 px-6 text-center">
-          <span className="serif text-3xl font-bold text-navy-950 sm:text-5xl">One HealthX team</span>
-          <p className="text-sm text-navy-700">Team photo coming soon</p>
-        </div>
-      )}
+      <div className="overflow-hidden">
+        <img src={teamPhoto.src} srcSet={teamPhoto.srcSet} sizes="(max-width: 1200px) calc(100vw - 48px), 1152px" width={teamPhoto.width} height={teamPhoto.height} alt="NUS HealthX team, academic year 2026–2027" loading="eager" fetchPriority="high" decoding="async" onError={() => setFailed(true)} className="block h-auto w-full origin-[40%_75%] scale-150" />
+      </div>
       <figcaption className="px-6 py-4 text-center text-sm font-semibold text-navy-700">NUS HealthX · AY 2026 / 2027</figcaption>
     </figure>
   );
@@ -117,13 +111,14 @@ function LinkedInIcon() {
 function PersonCard({ person, index }: { person: TeamPerson; index: number }) {
   const [photoFailed, setPhotoFailed] = useState(false);
   const photoFile = portraitFiles[person.name];
-  const photoUrl = person.photoUrl || (photoFile ? `${photoBaseUrl}${photoFile}` : undefined);
+  const optimizedPhoto = photoFile ? teamPhotos[photoFile] : undefined;
+  const photoUrl = person.photoUrl || optimizedPhoto?.src;
   return (
-    <FadeIn delay={index * 80}>
+    <FadeIn delay={Math.min(index * 40, 120)}>
       <article className="group text-center">
         <div className="initiative-card relative flex aspect-square items-center justify-center overflow-hidden transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-xl group-hover:shadow-navy-950/8">
           {photoUrl && !photoFailed ? (
-            <img src={photoUrl} alt={person.name} loading="lazy" onError={() => setPhotoFailed(true)} className={`absolute inset-0 h-full w-full ${person.photoUrl ? 'bg-white object-contain' : `object-cover ${person.name === 'Darren Chung' ? 'object-top' : person.name === 'Ng Chen Meng' ? 'object-[center_55%]' : 'object-bottom'}`}`} />
+            <img src={photoUrl} srcSet={person.photoUrl ? undefined : optimizedPhoto?.srcSet} sizes="(max-width: 640px) calc(100vw - 48px), 320px" width={person.photoUrl ? 301 : optimizedPhoto?.width} height={person.photoUrl ? 399 : optimizedPhoto?.height} alt={person.name} loading="lazy" decoding="async" onError={() => setPhotoFailed(true)} className={`absolute inset-0 h-full w-full ${person.photoUrl ? 'bg-white object-contain' : `object-cover ${person.name === 'Darren Chung' ? 'object-top' : person.name === 'Ng Chen Meng' ? 'object-[center_55%]' : 'object-bottom'}`}`} />
           ) : (
             <span className="text-5xl font-semibold tracking-tight text-navy-200 transition-colors duration-300 group-hover:text-navy-300">{person.initials}</span>
           )}
@@ -162,6 +157,7 @@ function SectionHeading({ title, description }: { title: string; description?: s
 export default function OurTeam() {
   return (
     <div className="bg-white">
+      <link rel="preconnect" href="https://xtwnqhnieobozjctwifp.supabase.co" crossOrigin="anonymous" />
       <section className="grain-bg px-6 py-32 text-center">
         <p className="mb-4 text-xs font-bold uppercase tracking-[0.3em] text-teal-400">The people</p>
         <h1 className="serif mx-auto mb-6 max-w-4xl text-[clamp(48px,8vw,96px)] font-bold leading-tight text-white">Our Team</h1>

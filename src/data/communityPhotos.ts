@@ -13,3 +13,10 @@ export const communityGallery = [
   { src: `${base}/photo_2026-10-07_21-31-59.jpg`, label: 'Our student community' },
   { src: `${base}/l1000054.jpg`, label: 'Visiting Collab Novena' },
 ];
+
+const aboutBase = 'https://xtwnqhnieobozjctwifp.supabase.co/storage/v1/object/public/community-photos/about';
+export const aboutPhoto = {
+  src: `${aboutBase}/l1020184-800.webp`,
+  srcSet: `${aboutBase}/l1020184-800.webp 800w, ${aboutBase}/l1020184-1600.webp 1600w`,
+  caption: 'NUS HealthX members gathered in a classroom',
+};

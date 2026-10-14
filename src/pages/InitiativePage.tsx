@@ -14,12 +14,8 @@ export type InitiativePageConfig = {
   purpose: string;
   pillarsHeading: string;
   cards: InitiativeCard[];
-  archiveDescription: string;
-  archiveHint: string;
-  stats?: string[];
+  secondaryCta?: { label: string; href: string };
 };
-
-const defaultStats = ['Students Engaged', 'Projects Incubated', 'Digital Engagement'];
 
 export function InitiativeHero({
   eyebrow = 'Programme',
@@ -27,12 +23,14 @@ export function InitiativeHero({
   description,
   ctaLabel,
   ctaHref = '#content',
+  secondaryCta,
 }: {
   eyebrow?: string;
   title: string;
   description: string;
   ctaLabel?: string;
   ctaHref?: string;
+  secondaryCta?: { label: string; href: string };
 }) {
   return (
     <section className="grain-bg px-6 py-32 text-center lg:py-40">
@@ -46,6 +44,7 @@ export function InitiativeHero({
             <span aria-hidden="true">→</span>
           </a>
         )}
+        {secondaryCta && <Link to={secondaryCta.href} className="mt-4 inline-flex items-center gap-3 rounded-full bg-white px-8 py-4 text-sm font-bold text-navy-950 sm:ml-4">{secondaryCta.label}<span aria-hidden="true">→</span></Link>}
       </div>
       <p className="mx-auto mt-20 text-[10px] font-bold uppercase tracking-[0.35em] text-white/40">Scroll to explore</p>
     </section>
@@ -98,20 +97,10 @@ export function InitiativeCta({
   );
 }
 
-function PlaceholderPhoto({ label }: { label: string }) {
-  return (
-    <div className="flex min-h-64 items-center justify-center rounded-2xl border border-navy-100 bg-gradient-to-br from-white to-navy-50 text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">
-      {label}
-    </div>
-  );
-}
-
 export default function InitiativePage({ config }: { config: InitiativePageConfig }) {
-  const stats = config.stats ?? defaultStats;
-
   return (
     <div className="bg-white">
-      <InitiativeHero title={config.title} description={config.heroDescription} ctaLabel={config.ctaLabel} ctaHref={config.ctaHref ?? '#get-involved'} />
+      <InitiativeHero title={config.title} description={config.heroDescription} ctaLabel={config.ctaLabel} ctaHref={config.ctaHref ?? '#get-involved'} secondaryCta={config.secondaryCta} />
 
       <section id="content" className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
@@ -119,32 +108,18 @@ export default function InitiativePage({ config }: { config: InitiativePageConfi
             <InitiativeSectionHeader eyebrow="The programme" title="How it works" />
           </FadeIn>
 
-          <div className="grid gap-6 lg:grid-cols-2">
+          <div className="max-w-4xl">
             <FadeIn>
               <div className="initiative-card h-full min-h-72 p-8 md:p-10">
                 <p className="mb-6 text-sm font-bold text-navy-950">Purpose</p>
                 <p className="max-w-xl whitespace-pre-line text-lg leading-relaxed text-slate-500">{config.purpose}</p>
               </div>
             </FadeIn>
-            <FadeIn delay={100}>
-              <PlaceholderPhoto label="Insert photo" />
-            </FadeIn>
-          </div>
-
-          <div className="mt-6 grid gap-5 md:grid-cols-3">
-            {stats.map((stat, index) => (
-              <FadeIn key={stat} delay={index * 80}>
-                <div className="initiative-card flex min-h-44 flex-col items-center justify-center p-7 text-center">
-                  <span className="serif mb-2 text-6xl font-bold leading-none text-navy-950">X</span>
-                  <p className="text-sm font-bold text-navy-950">{stat}</p>
-                </div>
-              </FadeIn>
-            ))}
           </div>
         </div>
       </section>
 
-      <section className="bg-slate-50 px-6 py-24">
+      {config.cards.length > 0 && <section className="bg-slate-50 px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <FadeIn className="mb-10">
             <h2 className="serif text-5xl font-bold text-navy-950">{config.pillarsHeading}</h2>
@@ -160,21 +135,7 @@ export default function InitiativePage({ config }: { config: InitiativePageConfi
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="px-6 py-24">
-        <div className="mx-auto max-w-6xl">
-          <FadeIn className="mb-10">
-            <h2 className="serif text-5xl font-bold text-navy-950">What we&apos;ve run</h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <div className="initiative-card flex min-h-52 flex-col items-center justify-center p-8 text-center">
-              <p className="mb-2 text-base text-slate-500">{config.archiveDescription}</p>
-              <p className="max-w-lg text-sm leading-relaxed text-slate-400">{config.archiveHint}</p>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
+      </section>}
 
       <InitiativeCta title="Stay in the loop" description="Join the HealthX Telegram channel for programme updates, event announcements, and registration links." ctaLabel="Join Telegram" href="https://t.me/nushealthx" />
     </div>

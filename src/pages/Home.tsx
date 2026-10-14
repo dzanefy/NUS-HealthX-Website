@@ -113,14 +113,14 @@ function DisciplinesTicker() {
 const initiatives = [
   { number: '01', tag: 'Open programme', title: "X'posure", desc: 'Talks, workshops, and conversations that make healthcare innovation easier to enter.', to: '/xposure', img: communityPhotos[2].src },
   { number: '02', tag: 'Member cohort', title: "X'perience", desc: 'A year-long path from clinical observation to tested ideas and practical capability.', to: '/xperience', img: communityGallery[1].src },
-  { number: '03', tag: 'Project placements', title: "X'ccelerate", desc: 'Work inside a real lab, startup, or hospital project with milestones and mentor support.', to: '/xcelerate', img: communityPhotos[0].src },
+  { number: '03', tag: 'Project placements', title: "X'ccelerate", desc: 'Share your background and interests through the X’ccelerate application form.', to: '/xcelerate', img: communityPhotos[0].src },
   { number: '04', tag: 'Mentorship network', title: "X'perts", desc: 'Find useful guidance from people building, treating, researching, and investing in healthcare.', to: '/xperts', img: communityGallery[0].src },
-  { number: '05', tag: 'Global exchange', title: "X'change", desc: 'See healthcare problems from another system, another market, and another set of constraints.', to: '/xchange', img: communityPhotos[1].src },
+  { number: '05', tag: 'Global exchange', title: "X'change", desc: 'Follow HealthX announcements for programme updates.', to: '/xchange', img: communityPhotos[1].src },
 ];
 
 const stats = [
   { label: 'Students engaged', from: 0, to: 600, prefix: '>', suffix: '' },
-  { label: 'Projects incubated', from: 0, to: 5, prefix: '', suffix: '+' },
+  { label: 'Projects incubated', from: 0, to: 5, prefix: '', suffix: '' },
   { label: 'Digital reach', from: 0, to: 100, prefix: '>', suffix: 'K' },
   { label: 'Year founded', from: 2020, to: 2024, prefix: '', suffix: '' },
 ];
@@ -193,7 +193,7 @@ export default function Home() {
               NUS HealthX brings together students from every discipline, united by a passion for improving healthcare through innovation, collaboration, and hands-on learning.
             </p>
             <p className="text-slate-400 leading-relaxed mb-8">We connect. We empower. We innovate.</p>
-            <a href="#" className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-navy-950 text-navy-950 text-sm font-bold rounded-full hover:bg-navy-950 hover:text-white transition-all">
+            <a href="https://t.me/nushealthx" className="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-navy-950 text-navy-950 text-sm font-bold rounded-full hover:bg-navy-950 hover:text-white transition-all">
               Join Us Now
             </a>
           </FadeIn>

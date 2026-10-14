@@ -1,13 +1,7 @@
 import FadeIn from '../components/FadeIn';
 import { InitiativeCta, InitiativeHero, InitiativeSectionHeader } from './InitiativePage';
 
-const phases = [
-  { num: '01', title: 'Needs finding', period: 'Sep to Oct', desc: 'Teams visit clinical environments, speak with people close to the problem, and identify genuine unmet needs before any design begins.' },
-  { num: '02', title: 'Problem framing', period: 'Nov to Dec', desc: 'Working with clinical mentors, teams turn observations into focused problem statements through needs validation and patient journey mapping.' },
-  { num: '03', title: 'Ideation and prototyping', period: 'Jan to Feb', desc: 'Teams develop and test possible solutions against clinical feasibility, user needs, regulatory constraints, and commercial viability.' },
-  { num: '04', title: 'Validation and showcase', period: 'Mar to Apr', desc: 'Prototypes are tested with users and clinical stakeholders before teams present their work at the HealthX Year-End Conference.' },
-];
-
+// Programme facts come from the supplied X_Perience_Page_compressed.pdf.
 export default function XPerience() {
   return (
     <div className="bg-white">
@@ -44,7 +38,7 @@ export default function XPerience() {
                   { label: '20 to 30 sessions', sub: 'September to April' },
                   { label: 'Clinician mentors', sub: 'Hospitals and industry' },
                   { label: 'Year-end showcase', sub: 'Partners and leaders' },
-                  { label: 'Grand Challenge pathway', sub: 'For selected projects' },
+                  { label: 'Medical Grand Challenge', sub: 'Top project nominations' },
                 ].map(({ label, sub }) => (
                   <div key={label} className="rounded-2xl border border-navy-100 bg-navy-50/70 p-4">
                     <p className="text-sm font-bold text-navy-950">{label}</p>
@@ -63,29 +57,21 @@ export default function XPerience() {
             <InitiativeSectionHeader eyebrow="The journey" title="Programme journey" />
           </FadeIn>
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {phases.map(({ num, title, period, desc }, i) => (
-              <FadeIn key={num} delay={i * 80}>
-                <article className="initiative-card h-full p-7 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-navy-950/8">
-                  <span className="serif mb-4 block text-6xl font-bold text-navy-100">{num}</span>
-                  <h3 className="serif mb-3 text-xl font-bold text-navy-950">{title}</h3>
-                  <p className="mb-3 text-xs font-bold uppercase tracking-widest text-brand-cyan">{period}</p>
-                  <p className="text-sm leading-relaxed text-slate-500">{desc}</p>
-                </article>
-              </FadeIn>
-            ))}
+          <div className="max-w-4xl space-y-5 leading-relaxed text-slate-600">
+            <p>
+              Across eight months, participants take part in seminars, hospital and industry visits, and interactive workshops. These experiences build skills in design thinking, prototyping, regulation, and commercialisation, while deepening understanding of clinical workflows and unmet needs.
+            </p>
+            <p>
+              Teams will present their solutions at the HealthX Year-End Conference, with top projects nominated for the Medical Grand Challenge.
+            </p>
           </div>
-
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm leading-relaxed text-slate-500">
-            Across eight months, participants take part in seminars, hospital and industry visits, and interactive workshops. Together, these sessions build confidence in design thinking, prototyping, regulation, and commercialisation.
-          </p>
         </div>
       </section>
 
       <section className="px-6 py-24">
         <div className="mx-auto max-w-6xl">
           <FadeIn>
-            <InitiativeSectionHeader eyebrow="AY25/26 kickoff" title="Programme sessions so far" />
+            <InitiativeSectionHeader eyebrow="November 2025 kickoff" title="Inaugural programme sessions" />
           </FadeIn>
 
           <div className="max-w-4xl">

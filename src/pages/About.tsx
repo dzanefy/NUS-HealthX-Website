@@ -1,4 +1,5 @@
 import FadeIn from '../components/FadeIn';
+import { aboutPhoto, communityPhotos } from '../data/communityPhotos';
 import block71Logo from '../assets/partners/block71.png';
 import kclLogo from '../assets/partners/kings-college-london.png';
 import keioNusLogo from '../assets/partners/keio-nus.png';
@@ -9,7 +10,7 @@ import nusMedicineLogo from '../assets/partners/nus-medicine.png';
 const values = [
   { title: 'Interdisciplinary Collaboration', desc: 'The most impactful healthcare solutions emerge when diverse disciplines converge. Every programme is built around cross-faculty teamwork.' },
   { title: 'Peer-Led Learning', desc: 'We create spaces where students learn as much from each other as from expert mentors through sharings, workshops, and hands-on projects.' },
-  { title: 'Real-World Impact', desc: 'We focus on tangible outcomes, including validated prototypes, launched ventures, and enduring networks that extend well beyond the walls of NUS.' },
+  { title: 'Real-World Impact', desc: 'We aim to help students apply what they learn to healthcare problems through collaboration and hands-on projects.' },
 ];
 
 const partners = [
@@ -55,10 +56,15 @@ export default function About() {
             </p>
           </FadeIn>
           <div className="relative">
-            <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-navy-50">
+            <div className="rounded-2xl overflow-hidden aspect-[3/2] bg-navy-50">
               <img
-                src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&h=600&fit=crop&auto=format"
-                alt="NUS HealthX team"
+                src={aboutPhoto.src}
+                srcSet={aboutPhoto.srcSet}
+                sizes="(max-width: 768px) calc(100vw - 48px), (max-width: 1200px) calc((100vw - 112px) / 2), 544px"
+                width={1600}
+                height={1067}
+                decoding="async"
+                alt={aboutPhoto.caption}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -75,7 +81,7 @@ export default function About() {
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
           {[
             { val: '>600', label: 'Students Engaged', sub: 'across all disciplines' },
-            { val: '5+', label: 'Projects Incubated', sub: 'with real-world traction' },
+            { val: '5', label: 'Projects Incubated', sub: 'healthcare projects' },
             { val: '>100K', label: 'Digital Reach', sub: 'across our platforms' },
           ].map(({ val, label, sub }, i) => (
             <FadeIn key={label} delay={i * 80}>
@@ -129,14 +135,10 @@ export default function About() {
       {/* ── GALLERY ── */}
       <section className="pb-24 px-6">
         <div className="max-w-6xl mx-auto grid grid-cols-3 gap-4">
-          {[
-            'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop&auto=format',
-            'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop&auto=format',
-            'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=600&h=400&fit=crop&auto=format',
-          ].map((src, i) => (
+          {communityPhotos.map(({ src, caption }, i) => (
             <FadeIn key={i} delay={i * 80}>
               <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-navy-50">
-                <img src={src} alt="" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
+                <img src={src} alt={caption} loading="lazy" className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"/>
               </div>
             </FadeIn>
           ))}

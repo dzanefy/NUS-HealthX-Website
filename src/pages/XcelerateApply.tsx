@@ -1,18 +1,6 @@
 import { FormEvent, useRef, useState } from "react"
 import { Link } from "react-router"
 
-const companies = [
-  "No preference",
-  "A*STAR",
-  "Abbott",
-  "Biofourmis",
-  "Boston Scientific",
-  "GE HealthCare",
-  "National University Hospital",
-  "Philips",
-  "SingHealth",
-  "Synapxe",
-]
 const sectors = [
   "MedTech",
   "Digital health",
@@ -178,17 +166,7 @@ export default function XcelerateApply() {
               </label>
             </div>
             <div className="initiative-card p-7">
-              <label className="block text-sm font-bold text-navy-950">
-                Preferred company
-                <select
-                  name="company"
-                  className="mt-2 w-full rounded-xl border border-navy-100 p-3 font-normal outline-none focus:border-teal-500"
-                >
-                  {companies.map((c) => (
-                    <option key={c}>{c}</option>
-                  ))}
-                </select>
-              </label>
+              <input type="hidden" name="company" value="No preference" />
               <p className="mb-3 mt-6 text-sm font-bold text-navy-950">
                 Interested sectors
               </p>

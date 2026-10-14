@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
-import { xposureEvents, type XPosureEvent } from '../data/events';
+import { type XPosureEvent } from '../data/events';
 import eventMedia from '../data/eventMedia';
 
-// Local content remains available in environments without a database connection.
-export function useEvents({ sheetOnly = false }: { sheetOnly?: boolean } = {}) {
-  const [events, setEvents] = useState<XPosureEvent[]>(supabase || sheetOnly ? [] : xposureEvents);
+// Public events come from the sheet-synced database, without sample fallback.
+export function useEvents({ sheetOnly = true }: { sheetOnly?: boolean } = {}) {
+  const [events, setEvents] = useState<XPosureEvent[]>([]);
   const [loading, setLoading] = useState(Boolean(supabase));
-  const [error, setError] = useState(sheetOnly && !supabase);
+  const [error, setError] = useState(!supabase);
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
