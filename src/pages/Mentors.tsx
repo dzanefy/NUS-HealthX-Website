@@ -225,7 +225,7 @@ export default function Mentors() {
           <p className="text-navy-200 leading-relaxed mb-8 max-w-md mx-auto">
             We are always looking to grow our network of clinicians, entrepreneurs, and industry experts passionate about nurturing the next generation of MedTech innovators.
           </p>
-          <a href="mailto:healthx@nus.edu.sg" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-navy-950 text-sm font-bold rounded-full hover:bg-navy-50 transition-colors">
+          <a href="mailto:nus.healthx@gmail.com" className="inline-flex items-center gap-2 px-8 py-4 bg-white text-navy-950 text-sm font-bold rounded-full hover:bg-navy-50 transition-colors">
             Get in touch →
           </a>
         </div>

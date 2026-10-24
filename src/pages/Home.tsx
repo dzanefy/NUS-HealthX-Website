@@ -47,33 +47,6 @@ function ScrambleWord() {
 }
 
 /* ── Count-up stat ───────────────────────────────────── */
-function CountUp({ from, to, prefix = '', suffix = '' }: { from: number; to: number; prefix?: string; suffix?: string }) {
-  const [val, setVal] = useState(from);
-  const elRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = elRef.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      obs.unobserve(el);
-      const start = performance.now();
-      const dur = 1000;
-      const tick = (now: number) => {
-        const p = Math.min((now - start) / dur, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
-        setVal(Math.round(from + (to - from) * eased));
-        if (p < 1) requestAnimationFrame(tick);
-      };
-      requestAnimationFrame(tick);
-    }, { threshold: 0.5 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [from, to]);
-
-  return <div ref={elRef}>{prefix}{val}{suffix}</div>;
-}
-
 /* ── Disciplines ticker ───────────────────────────── */
 const row1 = ['Medicine', 'Engineering', 'Business', 'Computing', 'Design', 'Science', 'Law', 'Pharmacy', 'Dentistry', 'Nursing'];
 const row2 = ['Biomedical Engineering', 'Public Health', 'Data Science', 'Architecture', 'Psychology', 'Computer Science', 'Entrepreneurship', 'Statistics', 'Social Work', 'Life Sciences'];
@@ -116,13 +89,6 @@ const initiatives = [
   { number: '03', tag: 'Project placements', title: "X'ccelerate", desc: 'Share your background and interests through the X’ccelerate application form.', to: '/xcelerate', img: communityPhotos[0].src },
   { number: '04', tag: 'Mentorship network', title: "X'perts", desc: 'Find useful guidance from people building, treating, researching, and investing in healthcare.', to: '/xperts', img: communityGallery[0].src },
   { number: '05', tag: 'Global exchange', title: "X'change", desc: 'Follow HealthX announcements for programme updates.', to: '/xchange', img: communityPhotos[1].src },
-];
-
-const stats = [
-  { label: 'Students engaged', from: 0, to: 600, prefix: '>', suffix: '' },
-  { label: 'Projects incubated', from: 0, to: 5, prefix: '', suffix: '' },
-  { label: 'Digital reach', from: 0, to: 100, prefix: '>', suffix: 'K' },
-  { label: 'Year founded', from: 2020, to: 2024, prefix: '', suffix: '' },
 ];
 
 const pillars = [
@@ -227,23 +193,6 @@ export default function Home() {
                   <p className="text-sm text-slate-500 leading-relaxed">{desc}</p>
                 </div>
               </div>
-            </FadeIn>
-          ))}
-        </div>
-      </section>
-
-      {/* ── STATS ── */}
-      <section className="grain-bg cta-section py-20 px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {stats.map(({ label, from, to, prefix, suffix }, i) => (
-            <FadeIn key={label} delay={i * 80} className="py-4">
-              <div
-                className="serif text-5xl font-bold text-white mb-2"
-                style={{ animation: `float ${3 + i * 0.4}s ease-in-out ${i * 0.3}s infinite` }}
-              >
-                <CountUp from={from} to={to} prefix={prefix} suffix={suffix} />
-              </div>
-              <p className="text-sm text-slate-400">{label}</p>
             </FadeIn>
           ))}
         </div>
