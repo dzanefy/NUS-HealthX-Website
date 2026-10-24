@@ -24,10 +24,10 @@ const initiativeLinks = [
   { to: '/xperience', label: "X'perience" },
   { to: '/xcelerate', label: "X'ccelerate" },
   { to: '/xperts', label: "X'perts" },
-  { to: '/xchange', label: "X'change" },
 ];
 
 const navLinks = [
+  { to: '/', label: 'Home' },
   { to: '/about', label: 'About' },
   { to: '/mentors', label: 'Mentors' },
   { to: '/our-team', label: 'Team' },
@@ -217,7 +217,6 @@ export default function Layout() {
                   { to: '/xperience', label: "Health X'perience" },
                   { to: '/xcelerate', label: "Health X'ccelerate" },
                   { to: '/xperts', label: "Health X'perts" },
-                  { to: '/xchange', label: "Health X'change" },
                   { to: '/our-team', label: 'Our Team' },
                   { to: '/mentors', label: 'Our Mentors' },
                   { to: '/timeline', label: 'Timeline' },
@@ -229,8 +228,12 @@ export default function Layout() {
             <div>
               <h3 className="text-xs font-bold uppercase tracking-widest text-white mb-5">Connect</h3>
               <ul className="space-y-3">
-                {['LinkedIn', 'Instagram', 'Telegram', 'Email us'].map(s => (
-                  <li key={s}><a href={s === 'Telegram' ? 'https://t.me/nushealthx' : '#'} className="text-sm text-slate-400 hover:text-white transition-colors">{s}</a></li>
+                {[
+                  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nus-healthx/home/' },
+                  { label: 'Instagram', href: 'https://www.instagram.com/nushealthx/' },
+                  { label: 'Telegram', href: 'https://t.me/nushealthx' },
+                ].map(({ label, href }) => (
+                  <li key={label}><a href={href} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-400 hover:text-white transition-colors">{label}</a></li>
                 ))}
               </ul>
             </div>
