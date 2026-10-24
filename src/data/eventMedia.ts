@@ -7,6 +7,14 @@ const eventMedia: Record<string, { cover: string; article: string[] }> = {
     cover: `${xeminarOneImages}/L1020406.JPG`,
     article: [`${xeminarOneImages}/L1020409.JPG`, `${xeminarOneImages}/L1020374.JPG`],
   },
+  'EVT-003': {
+    cover: '/events/xeminar-3/cover.jpg',
+    article: ['/events/xeminar-3/article-1.jpg', '/events/xeminar-3/article-2.jpg'],
+  },
+  'EVT-010': {
+    cover: '/events/coding-for-healthcare-1/cover.jpg',
+    article: ['/events/coding-for-healthcare-1/article.jpg'],
+  },
   'EVT-002': {
     cover: `${xeminarTwoImages}/l1000053-cover.webp`,
     article: [`${xeminarTwoImages}/l1000043-article.webp`, `${xeminarTwoImages}/l1000038-article.webp`],
